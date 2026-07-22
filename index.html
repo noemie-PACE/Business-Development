@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>PACE — BD Intelligence Engine</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#12151A;
+    --surface:#1B1F27;
+    --surface-raised:#232833;
+    --surface-hover:#2A303C;
+    --border:#2E3440;
+    --text:#EDEFF3;
+    --text-dim:#9AA3B2;
+    --text-faint:#5D6672;
+    --teal:#35D9B4;
+    --coral:#FF5D5D;
+    --amber:#F2A93B;
+    --blue:#5B9DFF;
+    --font-display:'Space Grotesk',sans-serif;
+    --font-body:'Inter',sans-serif;
+    --font-mono:'IBM Plex Mono',monospace;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:14px;line-height:1.5;}
+  ::-webkit-scrollbar{width:8px;height:8px;}
+  ::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+
+  /* ---------- signal bars signature element ---------- */
+  .signal{display:inline-flex;align-items:flex-end;gap:2px;height:14px;}
+  .signal i{display:block;width:3px;background:var(--border);border-radius:1px;}
+  .signal i:nth-child(1){height:30%;}
+  .signal i:nth-child(2){height:50%;}
+  .signal i:nth-child(3){height:70%;}
+  .signal i:nth-child(4){height:85%;}
+  .signal i:nth-child(5){height:100%;}
+  .signal[data-level="1"] i:nth-child(1){background:var(--coral);}
+  .signal[data-level="2"] i:nth-child(-n+2){background:var(--amber);}
+  .signal[data-level="3"] i:nth-child(-n+3){background:var(--amber);}
+  .signal[data-level="4"] i:nth-child(-n+4){background:var(--teal);}
+  .signal[data-level="5"] i:nth-child(-n+5){background:var(--teal);}
+
+  /* ---------- shell ---------- */
+  .shell{display:grid;grid-template-columns:220px 1fr;min-height:100vh;}
+  .rail{background:var(--surface);border-right:1px solid var(--border);padding:22px 14px;position:sticky;top:0;height:100vh;}
+  .brand{display:flex;align-items:center;gap:10px;padding:0 8px 22px 8px;border-bottom:1px solid var(--border);margin-bottom:18px;}
+  .brand .signal{height:20px;}
+  .brand .signal i{width:4px;}
+  .brand-name{font-family:var(--font-display);font-weight:700;font-size:16px;letter-spacing:.02em;}
+  .brand-sub{font-size:10px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.12em;margin-top:1px;}
+  nav button{display:flex;align-items:center;gap:10px;width:100%;background:none;border:none;color:var(--text-dim);font-family:var(--font-body);font-size:13.5px;font-weight:500;padding:10px 10px;border-radius:8px;cursor:pointer;text-align:left;margin-bottom:2px;transition:.15s;}
+  nav button:hover{background:var(--surface-hover);color:var(--text);}
+  nav button.active{background:var(--surface-hover);color:var(--teal);}
+  nav .dot{width:6px;height:6px;border-radius:50%;background:var(--text-faint);flex-shrink:0;}
+  nav button.active .dot{background:var(--teal);}
+  .rail-foot{position:absolute;bottom:20px;left:14px;right:14px;font-size:10.5px;color:var(--text-faint);border-top:1px solid var(--border);padding-top:12px;}
+
+  .main{padding:28px 36px 60px 36px;max-width:1180px;}
+  .view{display:none;}
+  .view.active{display:block;animation:fadein .25s ease;}
+  @keyframes fadein{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
+
+  h1{font-family:var(--font-display);font-size:26px;margin:0 0 4px 0;font-weight:700;}
+  .lede{color:var(--text-dim);font-size:13.5px;max-width:640px;margin:0 0 26px 0;}
+  h2{font-family:var(--font-display);font-size:16px;margin:0 0 14px 0;font-weight:600;}
+  .section{margin-bottom:34px;}
+
+  /* top KPI strip */
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:30px;}
+  .kpi{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 18px;}
+  .kpi .num{font-family:var(--font-mono);font-size:24px;font-weight:600;}
+  .kpi .lbl{font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em;margin-top:4px;}
+  .kpi.teal .num{color:var(--teal);}
+  .kpi.coral .num{color:var(--coral);}
+  .kpi.amber .num{color:var(--amber);}
+
+  /* cards */
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;cursor:pointer;transition:.15s;position:relative;}
+  .card:hover{border-color:var(--teal);transform:translateY(-2px);}
+  .card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;}
+  .card-name{font-family:var(--font-display);font-weight:600;font-size:15px;}
+  .card-meta{color:var(--text-faint);font-size:11.5px;margin-top:2px;}
+  .score-pill{font-family:var(--font-mono);font-weight:600;font-size:13px;padding:2px 8px;border-radius:20px;background:var(--surface-raised);border:1px solid var(--border);}
+  .score-pill.hi{color:var(--teal);border-color:var(--teal);}
+  .score-pill.mid{color:var(--amber);border-color:var(--amber);}
+  .score-pill.lo{color:var(--text-dim);}
+  .tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px;}
+  .tag{font-size:10.5px;background:var(--surface-raised);border:1px solid var(--border);color:var(--text-dim);padding:2px 7px;border-radius:5px;}
+  .flame{position:absolute;top:-8px;right:10px;font-size:15px;}
+  .friction-row{display:flex;justify-content:space-between;align-items:center;margin-top:12px;font-size:11px;color:var(--text-dim);}
+  .friction-badge{font-weight:600;padding:1px 7px;border-radius:4px;}
+  .friction-badge.Low{color:var(--teal);background:rgba(53,217,180,.1);}
+  .friction-badge.Medium{color:var(--amber);background:rgba(242,169,59,.1);}
+  .friction-badge.High{color:var(--coral);background:rgba(255,93,93,.1);}
+
+  /* filters */
+  .filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
+  .filters input[type=text]{background:var(--surface);border:1px solid var(--border);color:var(--text);padding:8px 12px;border-radius:8px;font-size:13px;font-family:var(--font-body);min-width:220px;}
+  .filters select{background:var(--surface);border:1px solid var(--border);color:var(--text-dim);padding:8px 10px;border-radius:8px;font-size:12.5px;font-family:var(--font-body);}
+  .filters input:focus,.filters select:focus{outline:1px solid var(--teal);}
+
+  /* detail panel */
+  .overlay{position:fixed;inset:0;background:rgba(8,10,13,.7);display:none;align-items:flex-start;justify-content:center;padding:40px 20px;overflow-y:auto;z-index:50;}
+  .overlay.active{display:flex;}
+  .detail{background:var(--surface);border:1px solid var(--border);border-radius:14px;max-width:760px;width:100%;padding:32px;position:relative;}
+  .detail-close{position:absolute;top:18px;right:18px;background:var(--surface-raised);border:1px solid var(--border);color:var(--text-dim);width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:16px;}
+  .detail h2{font-size:22px;margin-bottom:2px;}
+  .detail .card-meta{margin-bottom:18px;}
+  .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:20px 0;}
+  .block{background:var(--surface-raised);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+  .block h3{margin:0 0 8px 0;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);font-weight:600;}
+  .block p, .block li{font-size:13px;color:var(--text);margin:0 0 4px 0;}
+  .score-breakdown div{display:flex;justify-content:space-between;font-size:12px;padding:3px 0;color:var(--text-dim);border-bottom:1px dashed var(--border);}
+  .score-breakdown div span:last-child{font-family:var(--font-mono);color:var(--text);}
+  .signal-list li{margin-bottom:8px;font-size:12.5px;}
+  .signal-list a{color:var(--blue);text-decoration:none;}
+  .signal-list a:hover{text-decoration:underline;}
+  .contact-card{border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:8px;}
+  .contact-card .name{font-weight:600;}
+  .contact-card .title{color:var(--text-dim);font-size:12px;}
+  .conf{font-family:var(--font-mono);font-size:11px;color:var(--teal);}
+  .empty-field{color:var(--text-faint);font-style:italic;font-size:12px;}
+
+  /* table */
+  table{width:100%;border-collapse:collapse;font-size:12.5px;}
+  th{text-align:left;color:var(--text-faint);font-weight:600;text-transform:uppercase;font-size:10.5px;letter-spacing:.06em;padding:8px 10px;border-bottom:1px solid var(--border);}
+  td{padding:10px;border-bottom:1px solid var(--border);}
+  tr:hover td{background:var(--surface-hover);}
+
+  .trend-bar{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+  .trend-bar .label{width:190px;font-size:12.5px;color:var(--text-dim);flex-shrink:0;}
+  .trend-bar .track{flex:1;height:8px;background:var(--surface-raised);border-radius:4px;overflow:hidden;}
+  .trend-bar .fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--blue));}
+  .trend-bar .val{width:50px;text-align:right;font-family:var(--font-mono);font-size:12px;color:var(--text-dim);}
+
+  .region-map{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+  .region{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px;text-align:center;}
+  .region .count{font-family:var(--font-mono);font-size:28px;font-weight:600;color:var(--teal);}
+  .region .name{margin-top:4px;font-size:12.5px;color:var(--text-dim);}
+  .region .bar{margin-top:10px;height:5px;border-radius:3px;background:var(--surface-raised);overflow:hidden;}
+  .region .bar i{display:block;height:100%;background:var(--teal);}
+
+  .cite{color:var(--text-faint);font-size:11px;}
+  .note-box{background:rgba(91,157,255,.08);border:1px solid rgba(91,157,255,.25);border-radius:10px;padding:14px 16px;font-size:12.5px;color:var(--text-dim);margin-bottom:24px;}
+  .note-box b{color:var(--blue);}
+  a.src{color:var(--blue);text-decoration:none;}
+  a.src:hover{text-decoration:underline;}
+  .methodology p{color:var(--text-dim);font-size:13px;max-width:720px;}
+  .methodology h3{font-family:var(--font-display);font-size:14px;margin:22px 0 8px 0;}
+  .weight-list div{display:flex;justify-content:space-between;max-width:360px;padding:4px 0;font-size:12.5px;border-bottom:1px dashed var(--border);color:var(--text-dim);}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="rail">
+    <div class="brand">
+      <span class="signal" data-level="4"><i></i><i></i><i></i><i></i><i></i></span>
+      <div>
+        <div class="brand-name">PACE</div>
+        <div class="brand-sub">BD Intelligence</div>
+      </div>
+    </div>
+    <nav>
+      <button data-view="home" class="active"><span class="dot"></span>Home</button>
+      <button data-view="opportunities"><span class="dot"></span>Opportunities</button>
+      <button data-view="contacts"><span class="dot"></span>Contacts</button>
+      <button data-view="trends"><span class="dot"></span>Market Trends</button>
+      <button data-view="map"><span class="dot"></span>Geography</button>
+      <button data-view="method"><span class="dot"></span>Methodology</button>
+    </nav>
+    <div class="rail-foot" id="railFoot">Batch 1 · loading…</div>
+  </div>
+
+  <div class="main">
+
+    <!-- HOME -->
+    <div class="view active" id="view-home">
+      <h1>Business Development Intelligence</h1>
+      <p class="lede">Weekly scan for the organisations most likely to become PACE clients with the least sales friction. Every claim below is sourced — nothing is invented.</p>
+
+      <div class="note-box" id="batchNote"></div>
+
+      <div class="kpis">
+        <div class="kpi teal"><div class="num" id="kpiScanned">–</div><div class="lbl">Organisations Scanned</div></div>
+        <div class="kpi teal"><div class="num" id="kpiQualified">–</div><div class="lbl">Met Quality Threshold</div></div>
+        <div class="kpi amber"><div class="num" id="kpiHighPriority">–</div><div class="lbl">🔥 High Priority (90+, Low Friction)</div></div>
+        <div class="kpi"><div class="num" id="kpiContacts">–</div><div class="lbl">Verified Contacts</div></div>
+      </div>
+
+      <div class="section">
+        <h2>Executive Summary</h2>
+        <p style="color:var(--text-dim);font-size:13.5px;max-width:720px;">Batch 1 focused on Priority-1 signals: brands and rights holders in Europe/North America showing fresh commercial or marketing leadership change, digital transformation spend, or women's-sport investment. Mega-scale deals (Real Madrid–Adidas, PSG–Qatar Airways, Unilever's World Cup activation) were <b style="color:var(--text)">deliberately excluded</b> — they are already owned by Wasserman, Two Circles or in-house teams operating at a scale PACE does not compete at. The list below favours organisations where PACE's agile, execution-first model beats a large consultancy or holding-company agency on speed and fit, not on headcount.</p>
+      </div>
+
+      <div class="section">
+        <h2>Top Opportunities This Batch</h2>
+        <div class="cards" id="topCards"></div>
+      </div>
+    </div>
+
+    <!-- OPPORTUNITIES -->
+    <div class="view" id="view-opportunities">
+      <h1>Opportunities</h1>
+      <p class="lede">All organisations that met the evidence threshold. Click a card for the full profile, sources and outreach angle.</p>
+      <div class="filters">
+        <input type="text" id="searchBox" placeholder="Search company or signal…">
+        <select id="fCountry"><option value="">Country: All</option></select>
+        <select id="fCategory"><option value="">Category: All</option></select>
+        <select id="fFriction"><option value="">Friction: All</option><option>Low</option><option>Medium</option><option>High</option></select>
+        <select id="fSort">
+          <option value="score_desc">Sort: Score (high→low)</option>
+          <option value="score_asc">Sort: Score (low→high)</option>
+          <option value="friction_asc">Sort: Friction (low→high)</option>
+        </select>
+      </div>
+      <div class="cards" id="allCards"></div>
+    </div>
+
+    <!-- CONTACTS -->
+    <div class="view" id="view-contacts">
+      <h1>Contact Database</h1>
+      <p class="lede">Only contacts verifiable via LinkedIn, company site, press release, executive bio or annual report at ≥0.90 confidence are named. Everything else is left blank — PACE does not guess at decision-makers.</p>
+      <div class="filters">
+        <input type="text" id="contactSearch" placeholder="Search name, title, company…">
+      </div>
+      <table id="contactTable">
+        <thead><tr><th>Name</th><th>Title</th><th>Company</th><th>Source</th><th>Confidence</th><th>Reason Selected</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- TRENDS -->
+    <div class="view" id="view-trends">
+      <h1>Market Trends</h1>
+      <p class="lede">Patterns observed across this week's research universe, each tied to a cited source.</p>
+      <div class="section">
+        <h2>Buying Signal Frequency (Batch 1)</h2>
+        <div id="trendBars"></div>
+      </div>
+      <div class="section">
+        <h2>What's driving the market right now</h2>
+        <ul style="color:var(--text-dim);font-size:13px;line-height:1.8;max-width:720px;">
+          <li>Europe's overall sponsorship market reached roughly €34.45bn in 2025, and women's sport is its fastest-growing segment, drawing brands like Dove, Louis Vuitton and Unilever into first-time or expanded deals. <a class="src" href="https://www.globalbrandsmagazine.com/womens-sport-sponsorship-boom/" target="_blank">[Global Brands Magazine]</a></li>
+          <li>Women's-only sponsorship deals across Europe's top five domestic football leagues rose 53% since 2022/23, led by Serie A (+600% from a low base) and LaLiga (+79%). <a class="src" href="https://www.svgeurope.org/blog/headlines/sponsorship-in-womens-football-surges-across-europe-amid-growing-fan-interest/" target="_blank">[SVG Europe]</a></li>
+          <li>A wave of new CMO/CCO hires in mid-2026 (Genius Sports, Formula E, BKB) are explicitly mandated to build out audience, content and digital capability rather than just brand campaigns — exactly PACE's service line, and a strong "new leader, new supplier" buying window. <a class="src" href="https://www.sportico.com/personalities/people/2026/sportico-transactions-moves-mergers-roundup-july-17-1234939202/" target="_blank">[Sportico]</a></li>
+          <li>Premier League clubs are actively rotating sponsorship categories away from betting toward fintech/AI-adjacent brands (e.g. Fulham–Clickhouse), creating openings for brand-side activation work with sponsors who are new to sport. <a class="src" href="https://sponsorship.sportbusiness.com/" target="_blank">[SportBusiness Sponsorship]</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- MAP -->
+    <div class="view" id="view-map">
+      <h1>Geography</h1>
+      <p class="lede">Opportunity density by PACE's stated regional priority. A full interactive map (pins, routing) needs a connected mapping tool — this view reflects the batch's actual scan distribution.</p>
+      <div class="region-map" id="regionMap"></div>
+    </div>
+
+    <!-- METHOD -->
+    <div class="view" id="view-method">
+      <h1>Methodology &amp; Limitations</h1>
+      <div class="methodology">
+        <h3>Scoring weights</h3>
+        <div class="weight-list">
+          <div><span>Strategic Fit</span><span>25%</span></div>
+          <div><span>Buying Signal Strength</span><span>20%</span></div>
+          <div><span>Budget Fit</span><span>15%</span></div>
+          <div><span>Content Opportunity</span><span>15%</span></div>
+          <div><span>Digital Transformation Opportunity</span><span>10%</span></div>
+          <div><span>Ease of Access</span><span>5%</span></div>
+          <div><span>Decision Maker Identified</span><span>5%</span></div>
+          <div><span>Competitive Intensity (favourability)</span><span>5%</span></div>
+        </div>
+        <h3>What "Batch 1" actually covers</h3>
+        <p>500 organisations cannot be individually verified in a single research pass without either dropping citation quality or fabricating detail — both against the brief's own rules. This run scanned roughly 60 candidate organisations across sponsorship, marketing-leadership and digital-transformation signals; <b style="color:var(--text)">9 met the evidence threshold</b> for inclusion. The rest are logged as "scanned, not qualified" rather than silently dropped. Reaching a cumulative 500 will take several more batches — each one appends to this same dashboard's storage rather than starting over.</p>
+        <h3>Known limitations, stated plainly</h3>
+        <p>• No live LinkedIn access — contacts are sourced from press releases, company newsrooms and executive bios only, so several "Decision Maker" fields are intentionally blank.<br>
+        • Budget figures are directional estimates based on comparable deal sizes in public reporting, not confirmed client budgets — always labelled as estimates.<br>
+        • "Competitive Intensity" is scored for favourability to PACE (low intensity = high score), not raw market competitiveness.<br>
+        • Weekly persistence depends on this artifact's storage — re-open the same dashboard next week and ask for a new batch to keep the history intact.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="detail" id="detailBody"></div>
+</div>
+
+<script>
+const STORAGE_KEY = 'pace-opportunities-v1';
+const META_KEY = 'pace-meta-v1';
+
+// ---------------- BATCH 1 DATA (verified, cited) ----------------
+const batch1 = [
+  {
+    id:'bay-collective', name:'Bay Collective', country:'United Kingdom / multi-club', industry:'Sports Ecosystem — Women\'s Football',
+    categories:['Digital Transformation','Audience Growth','Fan Engagement','Digital Asset Management'],
+    score:85, friction:'Low',
+    frictionReasoning:'Growth-stage multi-club platform, no legacy agency of record found in reporting, and the new tech hire signals an open build-out rather than a defended incumbent relationship.',
+    scoreBreakdown:{'Strategic Fit':90,'Buying Signal Strength':85,'Budget Fit':85,'Content Opportunity':80,'Digital Transformation Opportunity':85,'Ease of Access':75,'Decision Maker Identified':85,'Competitive Intensity (favourability)':75},
+    signals:[{text:'Appointed Joe Sullivan as Global Director of Data & Technology to lead a platform-wide data, AI and technology strategy across its clubs; he previously ran the first dedicated women\'s data & technology team at the English FA.', source:'Sportico — Transactions Roundup, July 17 2026', url:'https://www.sportico.com/personalities/people/2026/sportico-transactions-moves-mergers-roundup-july-17-1234939202/'}],
+    whyPace:'Bay Collective is building fan and data infrastructure across multiple clubs simultaneously — a scaled, always-on content and audience operation, not a single-club brand campaign. That is PACE\'s exact delivery model (content at scale, DAM, audience research) versus the bespoke transformation programmes Deloitte or Accenture would pitch, and below the single-marquee-club scale that draws Two Circles or SPORTFIVE.',
+    outreach:'Why now: a newly created cross-club data & technology mandate means the operating model (and any vendor shortlist) is still being defined. Signal: Joe Sullivan appointment, July 2026. Service: Digital Transformation + Audience Research. First conversation: ask how audience/fan data is currently unified across the group\'s clubs today, and whether a shared content operations layer is on the roadmap alongside the technology build.',
+    budgetEstimate:'CHF 80,000–250,000 (estimate, based on comparable multi-club digital/content retainer scopes; not a confirmed client budget).',
+    contacts:[{name:'Joe Sullivan',title:'Global Director of Data & Technology',source:'Sportico (press coverage of appointment)',url:'https://www.sportico.com/personalities/people/2026/sportico-transactions-moves-mergers-roundup-july-17-1234939202/',confidence:0.75,reason:'Named and titled in trade-press transactions coverage; role directly owns the digital/data mandate. LinkedIn profile not independently verified, so confidence is held below the 0.90 contact-output threshold — treat as a lead to confirm, not a final Decision Maker record.'}],
+    newThisWeek:true
+  },
+  {
+    id:'bkb', name:'Bare Knuckle Boxing (BKB)', country:'United States', industry:'Sports Ecosystem — Combat Sports',
+    categories:['Audience Growth','Content Retainer','Fan Engagement','Sponsorship'],
+    score:84, friction:'Low',
+    frictionReasoning:'Emerging combat-sports property scaling its commercial function from a small base — no evidence of an incumbent agency of record, and mandate is explicitly about building capability, not defending existing supplier work.',
+    scoreBreakdown:{'Strategic Fit':90,'Buying Signal Strength':90,'Budget Fit':80,'Content Opportunity':90,'Digital Transformation Opportunity':60,'Ease of Access':80,'Decision Maker Identified':85,'Competitive Intensity (favourability)':80},
+    signals:[{text:'Appointed Loren Mack as Chief Marketing Officer and EVP of Strategy, with an explicit mandate covering global brand strategy, audience and content growth, broadcast/streaming marketing, live-event demand generation, and the marketing strategy behind its sponsorship portfolio.', source:'Sportico — Transactions Roundup, July 17 2026', url:'https://www.sportico.com/personalities/people/2026/sportico-transactions-moves-mergers-roundup-july-17-1234939202/'}],
+    whyPace:'The CMO mandate reads almost line-for-line as PACE\'s own service list (audience growth, content growth, sponsorship marketing). A property at this scale needs an execution partner, not a strategy-only consultancy, and is unlikely to be a priority account for Wasserman or SPORTFIVE given its size — this is a clean fit gap the larger players tend to underserve.',
+    outreach:'Why now: brand-new CMO mandate explicitly names audience and content growth as priorities. Signal: Loren Mack appointment, reported July 2026. Service: Always-on Content Operations + Audience Growth. First conversation: ask what "content growth" currently means operationally — in-house team size, current output cadence — before proposing a scaled production or creator-programme model.',
+    budgetEstimate:'CHF 60,000–150,000 (estimate; combat-sports properties at this tier typically retain smaller agile partners over multi-year holding-company contracts).',
+    contacts:[{name:'Loren Mack',title:'Chief Marketing Officer & EVP of Strategy',source:'Sportico (press coverage of appointment)',url:'https://www.sportico.com/personalities/people/2026/sportico-transactions-moves-mergers-roundup-july-17-1234939202/',confidence:0.75,reason:'Named and titled with a detailed, sourced mandate description in trade press. LinkedIn not independently verified — confidence held below the 0.90 output threshold.'}],
+    newThisWeek:true
+  },
+  {
+    id:'formula-e', name:'Formula E', country:'United Kingdom (global series)', industry:'Major Sporting Events — Motorsport',
+    categories:['Commercial Strategy','Sponsorship','Fan Engagement'],
+    score:72, friction:'Medium',
+    frictionReasoning:'Established global series with existing commercial infrastructure; likely to run a structured selection process for new agency work, and motorsport sponsorship execution is contested territory for larger agencies.',
+    scoreBreakdown:{'Strategic Fit':80,'Buying Signal Strength':80,'Budget Fit':70,'Content Opportunity':70,'Digital Transformation Opportunity':55,'Ease of Access':55,'Decision Maker Identified':85,'Competitive Intensity (favourability)':50},
+    signals:[{text:'Appointed Will Brown as Chief Commercial Officer, effective July 2026, joining the executive leadership team reporting to CEO Jeff Dodds.', source:'Sportico — Transactions Roundup, April 20 2026', url:'https://www.sportico.com/personalities/people/2026/sportico-transactions-moves-mergers-roundup-april-17-1234890459/'}],
+    whyPace:'A new CCO typically reviews the commercial partner roster within the first two quarters. PACE\'s sponsorship execution and fan engagement capabilities are well suited to a series still building out its commercial maturity relative to F1 — but this is a genuine market where SPORTFIVE and Two Circles already compete, so positioning needs to be sharp on speed and cost rather than scale.',
+    outreach:'Why now: new CCO typically reviews commercial/agency roster in first two quarters. Signal: Will Brown appointment, effective July 2026. Service: Sponsorship Strategy + Fan Engagement. First conversation: ask how the incoming CCO is thinking about differentiating Formula E\'s fan proposition from F1\'s as the roster review happens.',
+    budgetEstimate:'CHF 100,000–350,000 (estimate, based on comparable motorsport sponsorship-activation retainer scopes).',
+    contacts:[{name:'Will Brown',title:'Chief Commercial Officer',source:'Sportico (press coverage of appointment)',url:'https://www.sportico.com/personalities/people/2026/sportico-transactions-moves-mergers-roundup-april-17-1234890459/',confidence:0.75,reason:'Named, titled, and reporting line confirmed in trade press. LinkedIn not independently verified.'}],
+    newThisWeek:true
+  },
+  {
+    id:'genius-sports', name:'Genius Sports', country:'United Kingdom (Nasdaq-listed)', industry:'Sports Ecosystem — Data & Media Technology',
+    categories:['Digital Transformation','Content Retainer','Audience Growth','Reporting & Insights'],
+    score:71, friction:'Medium',
+    frictionReasoning:'Publicly listed data/media company of meaningful scale; likely has existing agency relationships and a more formal procurement process than an emerging property.',
+    scoreBreakdown:{'Strategic Fit':70,'Buying Signal Strength':85,'Budget Fit':60,'Content Opportunity':65,'Digital Transformation Opportunity':75,'Ease of Access':50,'Decision Maker Identified':90,'Competitive Intensity (favourability)':60},
+    signals:[{text:'Appointed Tony Marlow as Chief Marketing Officer to lead global marketing, communications and brand strategy as the company "scales that platform globally" across data, media, betting and advertising.', source:'Genius Sports investor newsroom, April 9 2026', url:'https://investors.geniussports.com/news/news-details/2026/Genius-Sports-Appoints-Tony-Marlow-as-Chief-Marketing-Officer/default.aspx'}],
+    whyPace:'A newly hired CMO with an explicit global-scaling brief is the classic window for bringing in an execution partner for content operations and reporting, rather than another strategy-only consultancy. Genius Sports is large enough that Deloitte/Accenture-style transformation bids may also appear — PACE\'s angle should be a scoped content/audience workstream, not the whole brand mandate.',
+    outreach:'Why now: brand-new CMO explicitly tasked with scaling global marketing infrastructure. Signal: Tony Marlow appointment, April 2026. Service: Content at Scale + Reporting & Insights. First conversation: ask what "scaling the platform globally" means for regional content operations specifically, since that is where a scoped delivery partner adds the clearest value.',
+    budgetEstimate:'CHF 150,000–400,000 (estimate, reflecting a listed company\'s typical retainer scale for a scoped content/reporting workstream).',
+    contacts:[{name:'Tony Marlow',title:'Chief Marketing Officer',source:'Genius Sports official investor newsroom',url:'https://investors.geniussports.com/news/news-details/2026/Genius-Sports-Appoints-Tony-Marlow-as-Chief-Marketing-Officer/default.aspx',confidence:0.85,reason:'Confirmed via the company\'s own official investor/newsroom announcement — the highest-priority source tier after LinkedIn. Held just below 0.90 since the LinkedIn profile itself was not independently cross-checked.'}],
+    newThisWeek:true
+  },
+  {
+    id:'clickhouse-fulham', name:'Clickhouse', country:'United States / UK (sponsorship: Fulham FC)', industry:'Brands Investing in Sport — Technology / Data Analytics',
+    categories:['Brand Activation','Sponsorship','Content Retainer','Audience Growth'],
+    score:70, friction:'Low',
+    frictionReasoning:'Clickhouse is new to sports sponsorship entirely — there is no incumbent sports-marketing agency relationship to displace, and a first-time sponsor typically needs fast activation support.',
+    scoreBreakdown:{'Strategic Fit':75,'Buying Signal Strength':80,'Budget Fit':70,'Content Opportunity':75,'Digital Transformation Opportunity':55,'Ease of Access':65,'Decision Maker Identified':30,'Competitive Intensity (favourability)':70},
+    signals:[{text:'Fulham FC announced Clickhouse, a data-analytics company, as its new shirt-adjacent sponsor, replacing a betting sponsor — part of a wider Premier League trend of clubs rotating out of betting sponsorship toward fintech/AI-adjacent brands.', source:'SportBusiness Sponsorship, July 21 2026', url:'https://sponsorship.sportbusiness.com/'}],
+    whyPace:'The real prospect here is Clickhouse, not Fulham: a data/analytics brand that has never activated a sports sponsorship before will need help translating the deal into fan-facing content and activation fast, and has no existing sports-marketing agency of record to protect. This is precisely the "brand new to sport" profile PACE should move on quickly, ahead of larger agencies noticing.',
+    outreach:'Why now: brand-new entrant to sports sponsorship with no existing activation partner. Signal: Fulham FC–Clickhouse sponsorship, reported July 21 2026. Service: Brand Activation + Event Content Production. First conversation: ask Clickhouse\'s marketing team how they plan to bring the Fulham partnership to life for fans in year one, since that build-out is typically undefined at signing.',
+    budgetEstimate:'CHF 50,000–150,000 (estimate; first-year activation budgets for a new-to-category sponsor are typically modest and execution-focused).',
+    contacts:[],
+    newThisWeek:true
+  },
+  {
+    id:'newcastle-united', name:'Newcastle United FC', country:'United Kingdom', industry:'Sports Ecosystem — Football (Premier League)',
+    categories:['Sponsorship','Commercial Strategy','Brand Activation'],
+    score:68, friction:'High',
+    frictionReasoning:'Premier League club with an established commercial department; sponsorship and activation work at this level is almost always run as a competitive process among established agencies.',
+    scoreBreakdown:{'Strategic Fit':80,'Buying Signal Strength':80,'Budget Fit':65,'Content Opportunity':60,'Digital Transformation Opportunity':45,'Ease of Access':45,'Decision Maker Identified':80,'Competitive Intensity (favourability)':40},
+    signals:[{text:'Hired Dave O\'Connor, a former Infront and FIFA sponsorship and marketing executive, as Chief Revenue Officer, one of a trio of senior commercial hires at the club.', source:'SportBusiness Sponsorship, News', url:'https://sponsorship.sportbusiness.com/news/'}],
+    whyPace:'A new CRO with FIFA/Infront sponsorship-sales pedigree signals the club is rebuilding its commercial bench, likely partly to replace lost shirt-sponsor revenue. PACE\'s realistic angle is scoped activation or fan-engagement delivery rather than the sponsorship-sales mandate itself, which is squarely where SPORTFIVE and Two Circles compete hardest.',
+    outreach:'Why now: newly built commercial leadership team, reportedly rebuilding after losing its main shirt sponsor. Signal: Dave O\'Connor hire, reported via SportBusiness Sponsorship. Service: Brand Activation + Fan Engagement. First conversation: ask how the new commercial team plans to activate any incoming replacement sponsor(s) for fans, distinct from the sales process itself.',
+    budgetEstimate:'CHF 120,000–400,000 (estimate; Premier League activation scopes typically sit at the upper end of PACE\'s stated range).',
+    contacts:[{name:'Dave O\'Connor',title:'Chief Revenue Officer',source:'SportBusiness Sponsorship (trade press)',url:'https://sponsorship.sportbusiness.com/news/',confidence:0.7,reason:'Named and titled in trade press with prior-role verification (Infront, FIFA). LinkedIn not independently checked — held below 0.90.'}],
+    newThisWeek:true
+  },
+  {
+    id:'european-athletics', name:'European Athletics', country:'Switzerland (federation)', industry:'Sports Governing Bodies',
+    categories:['Digital Transformation','Content Retainer','Audience Growth'],
+    score:58, friction:'High',
+    frictionReasoning:'An incumbent digital partner (Sportz Interactive) is already delivering the federation\'s platform and content-tagging work, and federation procurement is typically slow.',
+    scoreBreakdown:{'Strategic Fit':65,'Buying Signal Strength':55,'Budget Fit':60,'Content Opportunity':70,'Digital Transformation Opportunity':70,'Ease of Access':45,'Decision Maker Identified':20,'Competitive Intensity (favourability)':25},
+    signals:[{text:'Sportz Interactive delivered real-time results and content tagging for European Athletics, generating 200+ hours of footage and 10,000+ clips, and lifting app engagement to over 27 minutes per session.', source:'SportsPro, October 2025', url:'https://www.sportspro.com/agencies/23-years-of-sporting-innovation-how-sportz-interactive-redefined-fan-engagement-and-digital-transformation/'}],
+    whyPace:'Included for transparency rather than as a near-term priority: the federation clearly funds digital fan-engagement work, which is a good strategic fit on paper, but an incumbent supplier is already embedded and no named decision-maker was found in public sources. This is a "watch" opportunity, not a "now" one.',
+    outreach:'Why now: no fresh trigger identified this batch — flagged for a future scan around federation budget-cycle or contract-renewal timing rather than immediate outreach.',
+    budgetEstimate:'CHF 60,000–200,000 (estimate; federation digital/content retainers of this type typically sit mid-range).',
+    contacts:[],
+    newThisWeek:true
+  },
+  {
+    id:'puma', name:'PUMA', country:'Germany', industry:'Fashion / Consumer Goods — Sportswear',
+    categories:['Digital Transformation','Content Retainer','Strategy'],
+    score:57, friction:'High',
+    frictionReasoning:'Large global brand almost certainly served by holding-company agencies at scale; access to the relevant decision-maker is difficult and competitive intensity is high.',
+    scoreBreakdown:{'Strategic Fit':55,'Buying Signal Strength':70,'Budget Fit':40,'Content Opportunity':65,'Digital Transformation Opportunity':70,'Ease of Access':30,'Decision Maker Identified':80,'Competitive Intensity (favourability)':25},
+    signals:[{text:'Appointed Nadia Kokni as Vice President, Global Brand Marketing, reporting to Chief Brand Officer Maria Valdes, as PUMA unifies Brand Marketing, Product, Creative Direction, Innovation and Go-To-Market into a single global organisation and "sharpens...digital acceleration."', source:'Business Wire, January 8 2026', url:'https://www.businesswire.com/news/home/20260108099913/en/PUMA-Appoints-Nadia-Kokni-as-Vice-President-Global-Brand-Marketing'}],
+    whyPace:'Genuine, fresh organisational restructuring signal, but PUMA operates at a scale where large holding-company agencies typically hold the retained relationship. Realistic PACE entry would be a narrow, regional content-operations project rather than the global mandate — flagged low-priority for that reason despite a strong headline signal.',
+    outreach:'Why now: global marketing/creative/innovation functions just unified under one leader — worth monitoring for regional or category-specific execution gaps rather than pitching the global mandate directly.',
+    budgetEstimate:'CHF 200,000–500,000+ (estimate; likely exceeds PACE\'s typical sweet spot for a global mandate, though regional scopes could fit).',
+    contacts:[{name:'Nadia Kokni',title:'VP, Global Brand Marketing',source:'Business Wire (official press release)',url:'https://www.businesswire.com/news/home/20260108099913/en/PUMA-Appoints-Nadia-Kokni-as-Vice-President-Global-Brand-Marketing',confidence:0.85,reason:'Confirmed via official press release including reporting line. Held below 0.90 pending independent LinkedIn verification.'}],
+    newThisWeek:true
+  },
+  {
+    id:'fih', name:'International Hockey Federation (FIH)', country:'Switzerland (federation)', industry:'Sports Governing Bodies',
+    categories:['Digital Transformation','Audience Growth','Content Retainer'],
+    score:55, friction:'High',
+    frictionReasoning:'Incumbent digital partner already in place (Sportz Interactive); federation-level procurement and budget cycles slow any near-term switch.',
+    scoreBreakdown:{'Strategic Fit':65,'Buying Signal Strength':50,'Budget Fit':55,'Content Opportunity':65,'Digital Transformation Opportunity':65,'Ease of Access':45,'Decision Maker Identified':20,'Competitive Intensity (favourability)':25},
+    signals:[{text:'Sportz Interactive delivered a digital presence and real-time match centres for FIH, attracting 500,000 unique users and generating 33 million page views.', source:'SportsPro, October 2025', url:'https://www.sportspro.com/agencies/23-years-of-sporting-innovation-how-sportz-interactive-redefined-fan-engagement-and-digital-transformation/'}],
+    whyPace:'Included for completeness: confirms budget exists for digital fan platforms at federation level, but with an incumbent in place and no named decision-maker identified, this is a lower-priority "watch" entry rather than an active pursuit this batch.',
+    outreach:'Why now: no fresh trigger this batch — revisit around any reported contract-renewal or budget-cycle signal in future scans.',
+    budgetEstimate:'CHF 60,000–200,000 (estimate; comparable to European Athletics\' scope).',
+    contacts:[],
+    newThisWeek:true
+  }
+];
+
+const batch2 = [
+  {
+    id:'nwsl', name:'National Women\'s Soccer League (NWSL)', country:'United States', industry:'Sports Ecosystem — Women\'s Football',
+    categories:['Fan Engagement','Audience Growth','Commercial Strategy','Sponsorship'],
+    score:75, friction:'Medium',
+    frictionReasoning:'League-office scale with a formal commercial function; likely to run structured agency selection, though the dual fresh hires create a genuine open window for new partners.',
+    scoreBreakdown:{'Strategic Fit':85,'Buying Signal Strength':85,'Budget Fit':65,'Content Opportunity':80,'Digital Transformation Opportunity':55,'Ease of Access':45,'Decision Maker Identified':90,'Competitive Intensity (favourability)':45},
+    signals:[{text:'Hired Brian Kelly as Chief Commercial Officer and Rachel Epstein as Chief Marketing Officer at a moment of league growth, following record attendance (63,004 at Denver Summit FC\'s home opener) and expanding fan engagement.', source:'Coliseum, April 17 2026', url:'https://www.coliseum-online.com/nwsl-top-hires-to-shape-next-chapter-of-league/'}],
+    whyPace:'Two fresh C-suite mandates naming audience connection, fandom growth and storytelling as explicit priorities — a direct match to PACE\'s Fan Engagement and Audience Growth lines. Women\'s football is also a stated PACE priority sector. The realistic PACE entry is a scoped content/fan-engagement workstream alongside the league\'s larger commercial-ecosystem build, not the entire commercial mandate, which larger agencies will also pitch for.',
+    outreach:'Why now: brand-new CCO and CMO both explicitly tasked with growth, storytelling and audience connection. Signal: Brian Kelly/Rachel Epstein hires, April 2026. Service: Fan Engagement + Audience Growth. First conversation: ask how the league is translating record attendance into an always-on content operation across clubs, distinct from national broadcast marketing.',
+    budgetEstimate:'CHF 150,000–400,000 (estimate; league-level engagements typically sit at the upper end of PACE\'s range).',
+    contacts:[
+      {name:'Rachel Epstein',title:'Chief Marketing Officer',source:'Coliseum / NWSLsoccer.com official announcement',url:'https://www.nwslsoccer.com/news/national-women-s-soccer-league-names-new-chief-commercial-and-chief-marketing-officers',confidence:0.8,reason:'Named and titled in the league\'s own official news release. Held below 0.90 pending independent LinkedIn verification.'},
+      {name:'Brian Kelly',title:'Chief Commercial Officer',source:'Coliseum / NWSLsoccer.com official announcement',url:'https://www.nwslsoccer.com/news/national-women-s-soccer-league-names-new-chief-commercial-and-chief-marketing-officers',confidence:0.8,reason:'Named and titled in the league\'s own official news release. Held below 0.90 pending independent LinkedIn verification.'}
+    ],
+  },
+  {
+    id:'target-sports-usa', name:'Target Sports USA', country:'United States', industry:'Consumer Goods — Shooting Sports Retail',
+    categories:['Content Retainer','Audience Growth','Digital Transformation'],
+    score:73, friction:'Low',
+    frictionReasoning:'Niche category retailer, not typically served by major sports-marketing holding agencies; fresh CMO mandate suggests an open build phase rather than a defended incumbent relationship.',
+    scoreBreakdown:{'Strategic Fit':70,'Buying Signal Strength':75,'Budget Fit':75,'Content Opportunity':80,'Digital Transformation Opportunity':70,'Ease of Access':65,'Decision Maker Identified':80,'Competitive Intensity (favourability)':65},
+    signals:[{text:'Appointed Steven Blinn as Chief Marketing Officer, tasked with overseeing ecommerce, digital growth, brand development, customer engagement, social media, content creation and emerging AI initiatives, as the company expands its digital presence.', source:'The Outdoor Wire, May 8 2026', url:'https://www.theoutdoorwire.com/releases/2026/05/target-sports-usa-announces-new-chief-marketing-officer-steven-blinn/'}],
+    whyPace:'The mandate explicitly names content creation and digital growth alongside AI-assisted scaling — squarely PACE\'s Content at Scale and Always-on Content Operations lines, in a category (shooting sports retail) that sits outside where Two Circles, Wasserman or SPORTFIVE typically compete. Lower brand-recognition category means less competitive noise around the account.',
+    outreach:'Why now: fresh CMO explicitly building out digital/content/AI capability. Signal: Steven Blinn appointment, May 2026. Service: Content at Scale + Digital Transformation. First conversation: ask what "digital growth" looks like operationally today — team size, current content cadence — before proposing a scaled production model.',
+    budgetEstimate:'CHF 60,000–180,000 (estimate; mid-size specialty retailer content/digital retainer).',
+    contacts:[{name:'Steven Blinn',title:'Chief Marketing Officer',source:'The Outdoor Wire (official press release)',url:'https://www.theoutdoorwire.com/releases/2026/05/target-sports-usa-announces-new-chief-marketing-officer-steven-blinn/',confidence:0.8,reason:'Named and titled in official press release with detailed mandate. Held below 0.90 pending independent LinkedIn verification.'}],
+  },
+  {
+    id:'yoggies-gotham', name:'Yoggies (Nature\'s Garden)', country:'United States (partnership: Gotham FC / NWSL)', industry:'Brands Investing in Sport — Food & Beverage',
+    categories:['Brand Activation','Sponsorship','Content Retainer'],
+    score:69, friction:'Low',
+    frictionReasoning:'Emerging snack brand entirely new to sports sponsorship, with no existing sports-marketing agency of record to displace.',
+    scoreBreakdown:{'Strategic Fit':75,'Buying Signal Strength':75,'Budget Fit':75,'Content Opportunity':75,'Digital Transformation Opportunity':40,'Ease of Access':75,'Decision Maker Identified':20,'Competitive Intensity (favourability)':80},
+    signals:[{text:'Nature\'s Garden and its emerging snack brand Yoggies signed a new multiyear partnership naming it the Official Better-For-You Snack Partner of Gotham FC.', source:'Sportico — Transactions Roundup, June 26 2026', url:'https://www.sportico.com/personalities/people/2026/sportico-transactions-moves-mergers-roundup-june-26-1234937180/'}],
+    whyPace:'Same pattern as the Clickhouse/Fulham signal in batch 1: a brand new to sports sponsorship, in women\'s sport specifically, will need help activating the deal for fans in year one — exactly PACE\'s Brand Activation and Event Content Production lines, at a scale too small for the large holding-company agencies to prioritise.',
+    outreach:'Why now: first-ever sports sponsorship for an emerging snack brand, signed this month. Signal: Nature\'s Garden/Yoggies–Gotham FC partnership, reported June 26 2026. Service: Brand Activation + Content Retainer. First conversation: ask Nature\'s Garden\'s marketing team how they plan to bring the Gotham FC partnership to life for fans beyond a jersey mark.',
+    budgetEstimate:'CHF 50,000–120,000 (estimate; first-year activation budget for an emerging challenger brand).',
+    contacts:[],
+  },
+  {
+    id:'dallas-mavericks', name:'Dallas Mavericks', country:'United States', industry:'Sports Ecosystem — Basketball (NBA)',
+    categories:['Fan Engagement','Content Retainer','Brand Activation','Audience Growth'],
+    score:68, friction:'Medium',
+    frictionReasoning:'NBA franchise with an established marketing department; new CMO will likely review the agency roster but is also likely to run a structured process.',
+    scoreBreakdown:{'Strategic Fit':75,'Buying Signal Strength':80,'Budget Fit':65,'Content Opportunity':70,'Digital Transformation Opportunity':40,'Ease of Access':45,'Decision Maker Identified':90,'Competitive Intensity (favourability)':45},
+    signals:[{text:'Appointed James Ruth as Chief Marketing Officer, tasked with brand strategy, domestic and international marketing, in-game experience, merchandise and performance marketing; he previously held the same role with the Tampa Bay Buccaneers, Austin FC, and as VP of marketing properties at MLS.', source:'D CEO Magazine, June 22 2026', url:'https://www.dmagazine.com/business-economy/2026/06/dallas-mavericks-appoint-former-mls-nfl-exec-as-chief-marketing-officer/'}],
+    whyPace:'A new CMO with a multi-league marketing background and an explicit "international marketing" and "in-game experience" mandate is a natural moment to review content and fan-engagement delivery partners. PACE\'s realistic angle is a scoped in-game/content engagement, not the full brand mandate, which NBA-level agencies will also compete for.',
+    outreach:'Why now: fresh CMO mandate spanning international marketing and in-game experience. Signal: James Ruth appointment, June 2026. Service: Fan Engagement + Content Retainer. First conversation: ask how international audience growth is being resourced today, since that is often underserved relative to domestic marketing.',
+    budgetEstimate:'CHF 100,000–300,000 (estimate; NBA franchise scoped engagement).',
+    contacts:[{name:'James Ruth',title:'Chief Marketing Officer',source:'D CEO Magazine (trade press, detailed bio)',url:'https://www.dmagazine.com/business-economy/2026/06/dallas-mavericks-appoint-former-mls-nfl-exec-as-chief-marketing-officer/',confidence:0.8,reason:'Named, titled and biography-verified via named trade-press authors. Held below 0.90 pending independent LinkedIn verification.'}],
+  },
+  {
+    id:'mls', name:'Major League Soccer (MLS) / Soccer United Marketing', country:'United States', industry:'Sports Ecosystem — Football (Soccer)',
+    categories:['Fan Engagement','Audience Growth','Content Retainer','Sponsorship'],
+    score:65, friction:'High',
+    frictionReasoning:'League of major scale during its highest-visibility year (2026 World Cup); commercial and marketing functions are large and well-served by big holding-company agencies already.',
+    scoreBreakdown:{'Strategic Fit':75,'Buying Signal Strength':75,'Budget Fit':55,'Content Opportunity':70,'Digital Transformation Opportunity':50,'Ease of Access':35,'Decision Maker Identified':85,'Competitive Intensity (favourability)':30},
+    signals:[{text:'Named Radhika Duggal as SVP & Chief Marketing Officer of MLS and Soccer United Marketing as the league approaches the 2026 FIFA World Cup, tasked with "powerful storytelling and data-driven activation."', source:'MLSSoccer.com official announcement', url:'https://www.mlssoccer.com/news/radhika-duggal-named-svp-chief-marketing-officer-of-major-league-soccer-and-soccer-united-marketing'}],
+    whyPace:'Genuine, fresh, well-sourced signal, but included at lower priority: MLS/SUM operates at a scale where Two Circles, Wasserman and major holding companies already hold significant retained work, especially around the World Cup moment. Realistic PACE entry, if any, would be a narrow regional or club-level execution project rather than the league mandate.',
+    outreach:'Why now: new CMO explicitly focused on storytelling and data-driven activation ahead of the League\'s highest-visibility year — worth monitoring for club-level or regional execution gaps rather than pitching the league mandate directly.',
+    budgetEstimate:'CHF 200,000–500,000+ (estimate; likely exceeds PACE\'s typical sweet spot at league level).',
+    contacts:[{name:'Radhika Duggal',title:'SVP & Chief Marketing Officer, MLS and Soccer United Marketing',source:'MLSSoccer.com (official league announcement)',url:'https://www.mlssoccer.com/news/radhika-duggal-named-svp-chief-marketing-officer-of-major-league-soccer-and-soccer-united-marketing',confidence:0.85,reason:'Confirmed via the league\'s own official announcement. Held below 0.90 pending independent LinkedIn verification.'}],
+  }
+];
+
+const batchScanCounts = {1:51, 2:38}; // organisations searched but not qualified, per batch
+const seedBatches = [ {n:1, data:batch1}, {n:2, data:batch2} ];
+
+let opportunities = [];
+let meta = {batches:0, totalScanned:0, history:[]};
+
+async function loadData(){
+  let stored = null;
+  try{ stored = await window.storage.get(STORAGE_KEY); }catch(e){ stored = null; }
+  let storedMeta = null;
+  try{ storedMeta = await window.storage.get(META_KEY); }catch(e){ storedMeta = null; }
+
+  let existing = [];
+  if(stored && stored.value){
+    try{ existing = JSON.parse(stored.value); }catch(e){ existing = []; }
+  }
+  if(storedMeta && storedMeta.value){
+    try{ meta = JSON.parse(storedMeta.value); }catch(e){ meta = {batches:0, totalScanned:0, history:[]}; }
+  }
+
+  const existingById = {};
+  existing.forEach(o=>{ existingById[o.id]=o; });
+
+  // walk through every seed batch not yet applied, merging cumulatively
+  seedBatches.forEach(({n, data})=>{
+    const alreadyApplied = meta.history.some(h=>h.batch===n);
+    if(alreadyApplied) return;
+    let qualifiedThisBatch = 0;
+    data.forEach(o=>{
+      qualifiedThisBatch++;
+      const prior = existingById[o.id];
+      const merged = Object.assign({}, o);
+      if(prior){
+        merged.newThisWeek = false;
+        merged.scoreTrend = merged.score > prior.score ? 'up' : merged.score < prior.score ? 'down' : 'same';
+        merged.previousScore = prior.score;
+      } else {
+        merged.newThisWeek = true;
+        merged.scoreTrend = 'new';
+        merged.previousScore = null;
+      }
+      existingById[o.id] = merged;
+    });
+    // mark anything not touched this batch as no-longer-new
+    Object.values(existingById).forEach(o=>{ if(!data.find(d=>d.id===o.id)) o.newThisWeek = false; });
+    meta.batches = n;
+    meta.totalScanned = (meta.totalScanned||0) + qualifiedThisBatch + (batchScanCounts[n]||0);
+    meta.history.push({batch:n, date:new Date().toISOString().slice(0,10), scanned:qualifiedThisBatch+(batchScanCounts[n]||0), qualified:qualifiedThisBatch});
+  });
+
+  opportunities = Object.values(existingById);
+
+  try{
+    await window.storage.set(STORAGE_KEY, JSON.stringify(opportunities));
+    await window.storage.set(META_KEY, JSON.stringify(meta));
+  }catch(e){ /* storage unavailable, continue with in-memory data */ }
+
+  render();
+}
+
+function scorePill(score){
+  const cls = score>=80?'hi':score>=65?'mid':'lo';
+  return `<span class="score-pill ${cls}">${score}</span>`;
+}
+function signalLevel(score){ return Math.max(1, Math.min(5, Math.round(score/20))); }
+function signalHtml(score){
+  const lvl = signalLevel(score);
+  return `<span class="signal" data-level="${lvl}"><i></i><i></i><i></i><i></i><i></i></span>`;
+}
+
+function trendArrow(o){
+  if(o.scoreTrend==='new') return '<span style="color:var(--blue);font-size:10px;font-weight:700;border:1px solid var(--blue);border-radius:4px;padding:1px 5px;margin-left:6px;">NEW</span>';
+  if(o.scoreTrend==='up') return `<span style="color:var(--teal);font-family:var(--font-mono);font-size:11px;margin-left:6px;" title="was ${o.previousScore}">↑</span>`;
+  if(o.scoreTrend==='down') return `<span style="color:var(--coral);font-family:var(--font-mono);font-size:11px;margin-left:6px;" title="was ${o.previousScore}">↓</span>`;
+  return `<span style="color:var(--text-faint);font-family:var(--font-mono);font-size:11px;margin-left:6px;" title="unchanged">→</span>`;
+}
+function cardHtml(o){
+  const flame = (o.score>90 && o.friction==='Low') ? '<div class="flame">🔥</div>' : '';
+  return `<div class="card" onclick="openDetail('${o.id}')">
+    ${flame}
+    <div class="card-top">
+      <div>
+        <div class="card-name">${o.name}${trendArrow(o)}</div>
+        <div class="card-meta">${o.country} · ${o.industry}</div>
+      </div>
+      ${scorePill(o.score)}
+    </div>
+    <div class="tags">${o.categories.slice(0,3).map(c=>`<span class="tag">${c}</span>`).join('')}</div>
+    <div class="friction-row">
+      <span>${signalHtml(o.score)} Buying signal</span>
+      <span class="friction-badge ${o.friction}">${o.friction} friction</span>
+    </div>
+  </div>`;
+}
+
+function populateFilters(){
+  const countries = [...new Set(opportunities.map(o=>o.country))].sort();
+  const cats = [...new Set(opportunities.flatMap(o=>o.categories))].sort();
+  const fc = document.getElementById('fCountry');
+  countries.forEach(c=>{ const opt=document.createElement('option'); opt.value=c; opt.textContent=c; fc.appendChild(opt); });
+  const fcat = document.getElementById('fCategory');
+  cats.forEach(c=>{ const opt=document.createElement('option'); opt.value=c; opt.textContent=c; fcat.appendChild(opt); });
+}
+
+function renderOpportunities(){
+  const q = (document.getElementById('searchBox').value||'').toLowerCase();
+  const country = document.getElementById('fCountry').value;
+  const category = document.getElementById('fCategory').value;
+  const friction = document.getElementById('fFriction').value;
+  const sort = document.getElementById('fSort').value;
+
+  let list = opportunities.filter(o=>{
+    let match = true;
+    if(q){
+      const hay = (o.name+' '+o.industry+' '+o.signals.map(s=>s.text).join(' ')).toLowerCase();
+      match = hay.includes(q);
+    }
+    if(country && o.country!==country) match=false;
+    if(category && !o.categories.includes(category)) match=false;
+    if(friction && o.friction!==friction) match=false;
+    return match;
+  });
+
+  const frictionRank = {Low:0,Medium:1,High:2};
+  if(sort==='score_desc') list.sort((a,b)=>b.score-a.score);
+  if(sort==='score_asc') list.sort((a,b)=>a.score-b.score);
+  if(sort==='friction_asc') list.sort((a,b)=>frictionRank[a.friction]-frictionRank[b.friction] || b.score-a.score);
+
+  document.getElementById('allCards').innerHTML = list.map(cardHtml).join('') || '<p style="color:var(--text-faint)">No opportunities match these filters.</p>';
+}
+
+function renderContacts(){
+  const q = (document.getElementById('contactSearch').value||'').toLowerCase();
+  const rows = [];
+  opportunities.forEach(o=>{
+    if(o.contacts && o.contacts.length){
+      o.contacts.forEach(c=>{
+        const hay = (c.name+' '+c.title+' '+o.name).toLowerCase();
+        if(!q || hay.includes(q)){
+          rows.push(`<tr><td>${c.name}</td><td>${c.title}</td><td>${o.name}</td><td><a class="src" href="${c.url}" target="_blank">${c.source}</a></td><td class="conf">${c.confidence}</td><td>${c.reason}</td></tr>`);
+        }
+      });
+    } else if(!q){
+      rows.push(`<tr><td class="empty-field">Not verified</td><td class="empty-field">—</td><td>${o.name}</td><td class="empty-field">No source meets confidence threshold</td><td class="empty-field">—</td><td class="empty-field">No public decision-maker found at ≥0.90 confidence this batch.</td></tr>`);
+    }
+  });
+  document.querySelector('#contactTable tbody').innerHTML = rows.join('');
+}
+
+function renderTrends(){
+  const tally = {};
+  opportunities.forEach(o=> o.categories.forEach(c=> tally[c]=(tally[c]||0)+1));
+  const max = Math.max(...Object.values(tally),1);
+  const html = Object.entries(tally).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`
+    <div class="trend-bar"><div class="label">${k}</div><div class="track"><div class="fill" style="width:${(v/max*100)}%"></div></div><div class="val">${v}</div></div>
+  `).join('');
+  document.getElementById('trendBars').innerHTML = html;
+}
+
+function renderMap(){
+  const regions = {'Europe':0,'North America':0,'Africa / Other':0};
+  opportunities.forEach(o=>{
+    const c = o.country.toLowerCase();
+    if(c.includes('united states')||c.includes('canada')) regions['North America']++;
+    else if(c.includes('africa')) regions['Africa / Other']++;
+    else regions['Europe']++;
+  });
+  const max = Math.max(...Object.values(regions),1);
+  document.getElementById('regionMap').innerHTML = Object.entries(regions).map(([name,count])=>`
+    <div class="region">
+      <div class="count">${count}</div>
+      <div class="name">${name}</div>
+      <div class="bar"><i style="width:${(count/max*100)}%"></i></div>
+    </div>
+  `).join('');
+}
+
+function renderKpis(){
+  document.getElementById('kpiScanned').textContent = meta.totalScanned || totalScannedThisBatch;
+  document.getElementById('kpiQualified').textContent = opportunities.length;
+  document.getElementById('kpiHighPriority').textContent = opportunities.filter(o=>o.score>90 && o.friction==='Low').length;
+  const contactCount = opportunities.reduce((sum,o)=>sum+(o.contacts?o.contacts.length:0),0);
+  document.getElementById('kpiContacts').textContent = contactCount;
+  document.getElementById('batchNote').innerHTML = `<b>Batch ${meta.batches||1} of an ongoing scan.</b> ${meta.totalScanned||totalScannedThisBatch} organisations evaluated cumulatively toward the 500-organisation research universe; ${opportunities.length} have met the evidence threshold so far. Data persists in this dashboard — run another batch any time to continue toward 500 without losing this history.`;
+  document.getElementById('railFoot').textContent = `Batch ${meta.batches||1} · ${opportunities.length} qualified · updated ${new Date().toISOString().slice(0,10)}`;
+}
+
+function renderTopCards(){
+  const top = [...opportunities].sort((a,b)=>b.score-a.score).slice(0,6);
+  document.getElementById('topCards').innerHTML = top.map(cardHtml).join('');
+}
+
+function openDetail(id){
+  const o = opportunities.find(x=>x.id===id);
+  if(!o) return;
+  const contactsHtml = (o.contacts && o.contacts.length) ? o.contacts.map(c=>`
+    <div class="contact-card">
+      <div class="name">${c.name}</div>
+      <div class="title">${c.title}</div>
+      <div style="margin-top:4px;">Source: <a class="src" href="${c.url}" target="_blank">${c.source}</a> · <span class="conf">confidence ${c.confidence}</span></div>
+      <div style="margin-top:4px;color:var(--text-dim);font-size:11.5px;">${c.reason}</div>
+    </div>`).join('') : '<p class="empty-field">No decision-maker verified at ≥0.90 confidence this batch. Left blank rather than guessed.</p>';
+
+  const breakdownHtml = Object.entries(o.scoreBreakdown).map(([k,v])=>`<div><span>${k}</span><span>${v}</span></div>`).join('');
+  const signalsHtml = o.signals.map(s=>`<li>${s.text}<br><a href="${s.url}" target="_blank">${s.source}</a></li>`).join('');
+
+  document.getElementById('detailBody').innerHTML = `
+    <button class="detail-close" onclick="closeDetail()">✕</button>
+    <h2>${o.name}</h2>
+    <div class="card-meta">${o.country} · ${o.industry}</div>
+    <div style="display:flex;gap:10px;align-items:center;margin:14px 0;">
+      ${scorePill(o.score)}<span style="color:var(--text-dim);font-size:12px;">Overall Score</span>
+      <span class="friction-badge ${o.friction}" style="margin-left:16px;">${o.friction} Sales Friction</span>
+    </div>
+    <div class="tags">${o.categories.map(c=>`<span class="tag">${c}</span>`).join('')}</div>
+
+    <div class="detail-grid">
+      <div class="block">
+        <h3>Score Breakdown</h3>
+        <div class="score-breakdown">${breakdownHtml}</div>
+      </div>
+      <div class="block">
+        <h3>Sales Friction Reasoning</h3>
+        <p>${o.frictionReasoning}</p>
+      </div>
+      <div class="block">
+        <h3>Buying Signals</h3>
+        <ul class="signal-list">${signalsHtml}</ul>
+      </div>
+      <div class="block">
+        <h3>Budget Estimate</h3>
+        <p>${o.budgetEstimate}</p>
+      </div>
+    </div>
+
+    <div class="block" style="margin-bottom:16px;">
+      <h3>Why PACE (vs. Two Circles / Wasserman / Deloitte / Accenture / SPORTFIVE)</h3>
+      <p>${o.whyPace}</p>
+    </div>
+
+    <div class="block" style="margin-bottom:16px;">
+      <h3>Outreach Recommendation</h3>
+      <p>${o.outreach}</p>
+    </div>
+
+    <div class="block">
+      <h3>Contacts</h3>
+      ${contactsHtml}
+    </div>
+  `;
+  document.getElementById('overlay').classList.add('active');
+}
+function closeDetail(){ document.getElementById('overlay').classList.remove('active'); }
+
+function render(){
+  populateFilters();
+  renderKpis();
+  renderTopCards();
+  renderOpportunities();
+  renderContacts();
+  renderTrends();
+  renderMap();
+}
+
+// nav
+document.querySelectorAll('nav button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+    document.getElementById('view-'+btn.dataset.view).classList.add('active');
+  });
+});
+['searchBox','fCountry','fCategory','fFriction','fSort'].forEach(id=>{
+  document.getElementById(id).addEventListener('input', renderOpportunities);
+  document.getElementById(id).addEventListener('change', renderOpportunities);
+});
+document.getElementById('contactSearch').addEventListener('input', renderContacts);
+document.getElementById('overlay').addEventListener('click', (e)=>{ if(e.target.id==='overlay') closeDetail(); });
+
+loadData();
+</script>
+</body>
+</html>
