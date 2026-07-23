@@ -513,8 +513,36 @@ const batch3 = [
   }
 ];
 
-const batchScanCounts = {1:51, 2:38, 3:22}; // organisations searched but not qualified, per batch
-const seedBatches = [ {n:1, data:batch1}, {n:2, data:batch2}, {n:3, data:batch3} ];
+const batch4 = [
+  {
+    id:'cmc-markets-everton', name:'CMC Markets', country:'United Kingdom (partnership: Everton FC)', industry:'Brands Investing in Sport — Financial Services',
+    categories:['Brand Activation','Sponsorship','Content Retainer'],
+    score:63, friction:'Medium',
+    frictionReasoning:'Fresh front-of-shirt deal with no confirmed incumbent activation agency; Premier League context adds some competitive pressure, but the brand side often runs its own activation separately from the club\'s commercial department, which is more accessible than pitching the club itself.',
+    scoreBreakdown:{'Strategic Fit':75,'Buying Signal Strength':75,'Budget Fit':65,'Content Opportunity':70,'Digital Transformation Opportunity':40,'Ease of Access':40,'Decision Maker Identified':20,'Competitive Intensity (favourability)':45},
+    signals:[{text:'CMC Markets will become Everton\'s new front-of-shirt sponsor from the start of the 2026-27 season, replacing the club\'s previous betting-sector sponsor.', source:'SportBusiness Sponsorship', url:'https://www.sportbusiness.com/sector/sponsorship/'}],
+    whyPace:'A financial-trading brand stepping into a Premier League shirt deal needs to translate that association into credible, ongoing fan-facing content rather than a one-off launch moment — squarely PACE\'s Brand Activation and Content Retainer lines. At CMC Markets\' scale (a listed but mid-size trading platform, not a banking giant), a boutique delivery partner is a realistic fit rather than a reach.',
+    outreach:'Why now: brand-new front-of-shirt deal starting 2026-27, with activation planning likely still underway. Signal: CMC Markets–Everton sponsorship, via SportBusiness Sponsorship. Service: Brand Activation + Content Retainer. First conversation: ask CMC Markets\' marketing team how they plan to build fan affinity across the season, beyond the shirt itself.',
+    budgetEstimate:'CHF 80,000–200,000 (estimate; mid-size financial brand\'s activation budget for a new top-flight sponsorship).',
+    contacts:[],
+  },
+  {
+    id:'revolut-audi-f1', name:'Revolut', country:'United Kingdom (partnership: Audi F1 Team)', industry:'Brands Investing in Sport — Fintech',
+    categories:['Fan Engagement','Content Retainer','Digital Transformation'],
+    score:59, friction:'High',
+    scaleCaution:true,
+    frictionReasoning:'A landmark, multi-year Formula 1 title-partner deal for a $45bn fintech will be resourced through top-tier motorsport marketing agencies; realistic access for a 30-person team is essentially nil at the programme level.',
+    scoreBreakdown:{'Strategic Fit':70,'Buying Signal Strength':80,'Budget Fit':20,'Content Opportunity':70,'Digital Transformation Opportunity':60,'Ease of Access':15,'Decision Maker Identified':85,'Competitive Intensity (favourability)':10},
+    signals:[{text:'Revolut became title partner of the future Audi F1 Team from the 2026 season, its first major play in global sport, with Chief Marketing Officer Antoine Le Nel confirming the company was "in for the long run" as it targets 100 million customers by 2027.', source:'Reuters, via Flashscore', url:'https://www.flashscore.com/news/motorsport-formula-1-audi-f1-team-announces-revolut-as-title-sponsor-for-2026-season-on-multi-year-deal/4paWxFcK'}],
+    whyPace:'Included purely as a "watch," not a pursuit: the strategic logic (a brand entirely new to sport needing a fan-engagement build-out) is exactly PACE\'s strength, but a title-level F1 deal at this scale will run through CAA Sports-tier agencies. Flagged with scale caution rather than dropped, in case a narrow, market-specific fan-engagement gap ever becomes accessible.',
+    outreach:'Why now: brand-new to global sport, but scale means no realistic near-term entry point for a boutique partner — logged for awareness only, not active outreach.',
+    budgetEstimate:'Likely CHF 1,000,000+ at the programme level (estimate) — far above PACE\'s range; not a realistic target as currently scoped.',
+    contacts:[{name:'Antoine Le Nel',email:null,title:'Chief Marketing Officer',source:'Reuters (via Flashscore republication)',url:'https://www.flashscore.com/news/motorsport-formula-1-audi-f1-team-announces-revolut-as-title-sponsor-for-2026-season-on-multi-year-deal/4paWxFcK',confidence:0.8,reason:'Named and titled, quoted directly in Reuters wire coverage. LinkedIn not independently verified — held below 0.90. Direct email not publicly available.'}],
+  }
+];
+
+const batchScanCounts = {1:51, 2:38, 3:22, 4:16}; // organisations searched but not qualified, per batch
+const seedBatches = [ {n:1, data:batch1}, {n:2, data:batch2}, {n:3, data:batch3}, {n:4, data:batch4} ];
 
 let opportunities = [];
 let meta = {batches:0, totalScanned:0, history:[]};
