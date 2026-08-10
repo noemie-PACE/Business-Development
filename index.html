@@ -164,6 +164,7 @@
     <nav>
       <button data-view="home" class="active"><span class="dot"></span>Home</button>
       <button data-view="opportunities"><span class="dot"></span>Opportunities</button>
+      <button data-view="swiss-events"><span class="dot"></span>Swiss Events (1YTG)</button>
       <button data-view="contacts"><span class="dot"></span>Contacts</button>
       <button data-view="trends"><span class="dot"></span>Market Trends</button>
       <button data-view="map"><span class="dot"></span>Geography</button>
@@ -199,6 +200,27 @@
       </div>
     </div>
 
+    <!-- SWISS EVENTS -->
+    <div class="view" id="view-swiss-events">
+      <h1>Switzerland — Future Events &amp; 1YTG Windows</h1>
+      <p class="lede">Confirmed and bid-stage sporting events hosted in Switzerland, screened for a "1 Year To Go" (1YTG) narrative-campaign pitch window. As of today (10 August 2026), a genuine 1YTG moment falls on events happening around August 2027 — events already inside 12 months out have likely passed the classic 1YTG anchor, but remain live opportunities under a different framing.</p>
+      <div class="note-box"><b>Reading this table:</b> "1YTG window" marks whether the one-year-out anniversary of the event falls in the future (a live pitch opportunity) or has already passed (event is closer than 12 months away, so the pitch angle shifts to "final countdown" / on-the-ground activation rather than 1YTG).</div>
+      <table>
+        <thead><tr><th>Event</th><th>Dates</th><th>Host / Organiser</th><th>1YTG Window</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td>EuroBeachVolley 2027 (European Beach Volleyball Championships)</td><td>2027 (exact dates TBC)</td><td>Swiss Volley &amp; Sports Events Gstaad (SEG), with CEV</td><td class="empty-field">TBC — confirm exact 2027 dates with organiser before pitching 1YTG timing</td><td><a class="src" href="https://www.beachgstaad.ch/en/news-articles/em-2027" target="_blank">Beach Gstaad</a></td></tr>
+          <tr><td>European Aquatics Junior Open Water Swimming Championships</td><td>16–19 June 2027</td><td>Swiss Aquatics</td><td>Passed (1YTG was ~June 2026) — pitch as final-countdown/on-site activation instead</td><td><a class="src" href="https://europeanaquatics.org/switzerland-to-host-european-aquatics-junior-open-water-swimming-championships-2027/" target="_blank">European Aquatics</a></td></tr>
+          <tr><td>FIS Alpine Skiing World Championships</td><td>1–14 February 2027</td><td>Crans-Montana / Swiss-Ski</td><td>Passed (1YTG was ~February 2026) — pitch as final-countdown/on-site activation instead</td><td><a class="src" href="https://www.scoreandchange.com/sports_events/" target="_blank">Score and Change</a></td></tr>
+          <tr><td>ISU European Figure Skating Championships</td><td>27–31 January 2027</td><td>Lausanne</td><td>Passed (1YTG was ~January 2026) — pitch as final-countdown/on-site activation instead</td><td><a class="src" href="https://www.scoreandchange.com/sports_events/" target="_blank">Score and Change</a></td></tr>
+          <tr><td>Switzerland 2038 Olympic &amp; Paralympic Winter Games (bid stage)</td><td>Bid stage — host decision not yet made</td><td>Swiss Olympic / national bid committee</td><td>Far out — not a 1YTG moment yet, but an early-relationship opportunity now (see Opportunities)</td><td><a class="src" href="https://www.sportbusiness.com/geography/switzerland/" target="_blank">SportBusiness</a></td></tr>
+        </tbody>
+      </table>
+      <div class="section" style="margin-top:24px;">
+        <h2>Assessment</h2>
+        <p style="color:var(--text-dim);font-size:13.5px;max-width:720px;">Of the confirmed 2027 events found this batch, none currently sit at a forward-looking 1YTG anchor from today's date — Crans-Montana, Lausanne and the Swiss Aquatics championships are all inside 12 months out already, meaning their natural "1 year to go" media moment already happened earlier in 2026 without a PACE campaign attached. <b style="color:var(--text)">EuroBeachVolley Gstaad 2027's exact dates weren't confirmed in this search</b> — if it lands in autumn 2027 rather than summer, a genuine 1YTG window could still be open now or very soon; this needs a direct check with Sports Events Gstaad before treating it as a live opportunity. The Switzerland 2038 Olympic bid is the strongest genuine long-lead opportunity found — bid committees typically start building public narrative years before a hosting vote, so an early relationship (logged in Opportunities) is more valuable than waiting for a 1YTG moment that's over a decade away.</p>
+      </div>
+    </div>
+
     <!-- OPPORTUNITIES -->
     <div class="view" id="view-opportunities">
       <h1>Opportunities</h1>
@@ -213,6 +235,9 @@
           <option value="score_asc">Sort: Score (low→high)</option>
           <option value="friction_asc">Sort: Friction (low→high)</option>
         </select>
+        <label style="display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);padding:8px 12px;border-radius:8px;font-size:12.5px;color:var(--text-dim);cursor:pointer;">
+          <input type="checkbox" id="fFocusOnly" checked style="accent-color:var(--teal);"> Current focus only (EU/MENA/South Africa, CHF 20k–100k)
+        </label>
       </div>
       <div class="cards" id="allCards"></div>
     </div>
@@ -298,7 +323,7 @@ const META_KEY = 'pace-meta-v1';
 // ---------------- BATCH 1 DATA (verified, cited) ----------------
 const batch1 = [
   {
-    id:'bay-collective', name:'Bay Collective', country:'United Kingdom / multi-club', industry:'Sports Ecosystem — Women\'s Football',
+    id:'bay-collective',inFocus:true, name:'Bay Collective', country:'United Kingdom / multi-club', industry:'Sports Ecosystem — Women\'s Football',
     categories:['Digital Transformation','Audience Growth','Fan Engagement','Digital Asset Management'],
     score:85, friction:'Low',
     frictionReasoning:'Growth-stage multi-club platform, no legacy agency of record found in reporting, and the new tech hire signals an open build-out rather than a defended incumbent relationship.',
@@ -311,7 +336,7 @@ const batch1 = [
     newThisWeek:true
   },
   {
-    id:'bkb', name:'Bare Knuckle Boxing (BKB)', country:'United States', industry:'Sports Ecosystem — Combat Sports',
+    id:'bkb',inFocus:false, name:'Bare Knuckle Boxing (BKB)', country:'United States', industry:'Sports Ecosystem — Combat Sports',
     categories:['Audience Growth','Content Retainer','Fan Engagement','Sponsorship'],
     score:84, friction:'Low',
     frictionReasoning:'Emerging combat-sports property scaling its commercial function from a small base — no evidence of an incumbent agency of record, and mandate is explicitly about building capability, not defending existing supplier work.',
@@ -324,7 +349,7 @@ const batch1 = [
     newThisWeek:true
   },
   {
-    id:'formula-e', name:'Formula E', country:'United Kingdom (global series)', industry:'Major Sporting Events — Motorsport',
+    id:'formula-e',inFocus:true, name:'Formula E', country:'United Kingdom (global series)', industry:'Major Sporting Events — Motorsport',
     categories:['Commercial Strategy','Sponsorship','Fan Engagement'],
     score:72, friction:'Medium',
     frictionReasoning:'Established global series with existing commercial infrastructure; likely to run a structured selection process for new agency work, and motorsport sponsorship execution is contested territory for larger agencies.',
@@ -337,7 +362,7 @@ const batch1 = [
     newThisWeek:true
   },
   {
-    id:'genius-sports', name:'Genius Sports', country:'United Kingdom (Nasdaq-listed)', industry:'Sports Ecosystem — Data & Media Technology',
+    id:'genius-sports',inFocus:true, name:'Genius Sports', country:'United Kingdom (Nasdaq-listed)', industry:'Sports Ecosystem — Data & Media Technology',
     categories:['Digital Transformation','Content Retainer','Audience Growth','Reporting & Insights'],
     score:71, friction:'Medium',
     frictionReasoning:'Publicly listed data/media company of meaningful scale; likely has existing agency relationships and a more formal procurement process than an emerging property.',
@@ -350,7 +375,7 @@ const batch1 = [
     newThisWeek:true
   },
   {
-    id:'clickhouse-fulham', name:'Clickhouse', country:'United States / UK (sponsorship: Fulham FC)', industry:'Brands Investing in Sport — Technology / Data Analytics',
+    id:'clickhouse-fulham',inFocus:false, name:'Clickhouse', country:'United States / UK (sponsorship: Fulham FC)', industry:'Brands Investing in Sport — Technology / Data Analytics',
     categories:['Brand Activation','Sponsorship','Content Retainer','Audience Growth'],
     score:70, friction:'Low',
     frictionReasoning:'Clickhouse is new to sports sponsorship entirely — there is no incumbent sports-marketing agency relationship to displace, and a first-time sponsor typically needs fast activation support.',
@@ -363,7 +388,7 @@ const batch1 = [
     newThisWeek:true
   },
   {
-    id:'newcastle-united', name:'Newcastle United FC', country:'United Kingdom', industry:'Sports Ecosystem — Football (Premier League)',
+    id:'newcastle-united',inFocus:true, name:'Newcastle United FC', country:'United Kingdom', industry:'Sports Ecosystem — Football (Premier League)',
     categories:['Sponsorship','Commercial Strategy','Brand Activation'],
     score:68, friction:'High',
     frictionReasoning:'Premier League club with an established commercial department; sponsorship and activation work at this level is almost always run as a competitive process among established agencies.',
@@ -376,7 +401,7 @@ const batch1 = [
     newThisWeek:true
   },
   {
-    id:'european-athletics', name:'European Athletics', country:'Switzerland (federation)', industry:'Sports Governing Bodies',
+    id:'european-athletics',inFocus:true, name:'European Athletics', country:'Switzerland (federation)', industry:'Sports Governing Bodies',
     categories:['Digital Transformation','Content Retainer','Audience Growth'],
     score:58, friction:'High',
     frictionReasoning:'An incumbent digital partner (Sportz Interactive) is already delivering the federation\'s platform and content-tagging work, and federation procurement is typically slow.',
@@ -389,7 +414,7 @@ const batch1 = [
     newThisWeek:true
   },
   {
-    id:'puma', name:'PUMA', country:'Germany', industry:'Fashion / Consumer Goods — Sportswear',
+    id:'puma',inFocus:true, name:'PUMA', country:'Germany', industry:'Fashion / Consumer Goods — Sportswear',
     categories:['Digital Transformation','Content Retainer','Strategy'],
     score:57, friction:'High',
     frictionReasoning:'Large global brand almost certainly served by holding-company agencies at scale; access to the relevant decision-maker is difficult and competitive intensity is high.',
@@ -402,7 +427,7 @@ const batch1 = [
     newThisWeek:true
   },
   {
-    id:'fih', name:'International Hockey Federation (FIH)', country:'Switzerland (federation)', industry:'Sports Governing Bodies',
+    id:'fih',inFocus:true, name:'International Hockey Federation (FIH)', country:'Switzerland (federation)', industry:'Sports Governing Bodies',
     categories:['Digital Transformation','Audience Growth','Content Retainer'],
     score:55, friction:'High',
     frictionReasoning:'Incumbent digital partner already in place (Sportz Interactive); federation-level procurement and budget cycles slow any near-term switch.',
@@ -418,7 +443,7 @@ const batch1 = [
 
 const batch2 = [
   {
-    id:'nwsl', name:'National Women\'s Soccer League (NWSL)', country:'United States', industry:'Sports Ecosystem — Women\'s Football',
+    id:'nwsl',inFocus:false, name:'National Women\'s Soccer League (NWSL)', country:'United States', industry:'Sports Ecosystem — Women\'s Football',
     categories:['Fan Engagement','Audience Growth','Commercial Strategy','Sponsorship'],
     score:75, friction:'Medium',
     frictionReasoning:'League-office scale with a formal commercial function; likely to run structured agency selection, though the dual fresh hires create a genuine open window for new partners.',
@@ -433,7 +458,7 @@ const batch2 = [
     ],
   },
   {
-    id:'target-sports-usa', name:'Target Sports USA', country:'United States', industry:'Consumer Goods — Shooting Sports Retail',
+    id:'target-sports-usa',inFocus:false, name:'Target Sports USA', country:'United States', industry:'Consumer Goods — Shooting Sports Retail',
     categories:['Content Retainer','Audience Growth','Digital Transformation'],
     score:73, friction:'Low',
     frictionReasoning:'Niche category retailer, not typically served by major sports-marketing holding agencies; fresh CMO mandate suggests an open build phase rather than a defended incumbent relationship.',
@@ -445,7 +470,7 @@ const batch2 = [
     contacts:[{name:'Steven Blinn',email:null,title:'Chief Marketing Officer',source:'The Outdoor Wire (official press release)',url:'https://www.theoutdoorwire.com/releases/2026/05/target-sports-usa-announces-new-chief-marketing-officer-steven-blinn/',confidence:0.8,reason:'Named and titled in official press release with detailed mandate. Held below 0.90 pending independent LinkedIn verification.'}],
   },
   {
-    id:'yoggies-gotham', name:'Yoggies (Nature\'s Garden)', country:'United States (partnership: Gotham FC / NWSL)', industry:'Brands Investing in Sport — Food & Beverage',
+    id:'yoggies-gotham',inFocus:false, name:'Yoggies (Nature\'s Garden)', country:'United States (partnership: Gotham FC / NWSL)', industry:'Brands Investing in Sport — Food & Beverage',
     categories:['Brand Activation','Sponsorship','Content Retainer'],
     score:69, friction:'Low',
     frictionReasoning:'Emerging snack brand entirely new to sports sponsorship, with no existing sports-marketing agency of record to displace.',
@@ -457,7 +482,7 @@ const batch2 = [
     contacts:[],
   },
   {
-    id:'dallas-mavericks', name:'Dallas Mavericks', country:'United States', industry:'Sports Ecosystem — Basketball (NBA)',
+    id:'dallas-mavericks',inFocus:false, name:'Dallas Mavericks', country:'United States', industry:'Sports Ecosystem — Basketball (NBA)',
     categories:['Fan Engagement','Content Retainer','Brand Activation','Audience Growth'],
     score:68, friction:'Medium',
     frictionReasoning:'NBA franchise with an established marketing department; new CMO will likely review the agency roster but is also likely to run a structured process.',
@@ -469,7 +494,7 @@ const batch2 = [
     contacts:[{name:'James Ruth',email:null,title:'Chief Marketing Officer',source:'D CEO Magazine (trade press, detailed bio)',url:'https://www.dmagazine.com/business-economy/2026/06/dallas-mavericks-appoint-former-mls-nfl-exec-as-chief-marketing-officer/',confidence:0.8,reason:'Named, titled and biography-verified via named trade-press authors. Held below 0.90 pending independent LinkedIn verification.'}],
   },
   {
-    id:'mls', name:'Major League Soccer (MLS) / Soccer United Marketing', country:'United States', industry:'Sports Ecosystem — Football (Soccer)',
+    id:'mls',inFocus:false, name:'Major League Soccer (MLS) / Soccer United Marketing', country:'United States', industry:'Sports Ecosystem — Football (Soccer)',
     categories:['Fan Engagement','Audience Growth','Content Retainer','Sponsorship'],
     score:65, friction:'High',
     frictionReasoning:'League of major scale during its highest-visibility year (2026 World Cup); commercial and marketing functions are large and well-served by big holding-company agencies already.',
@@ -484,7 +509,7 @@ const batch2 = [
 
 const batch3 = [
   {
-    id:'sa-rugby', name:'SA Rugby', country:'South Africa', industry:'Sports Governing Bodies — Rugby',
+    id:'sa-rugby',inFocus:true, name:'SA Rugby', country:'South Africa', industry:'Sports Governing Bodies — Rugby',
     categories:['Sponsorship','Brand Activation','Fan Engagement'],
     score:63, friction:'Medium',
     frictionReasoning:'National federation with a recently completed sponsorship portfolio (procurement cycle likely just closed), and no named marketing/commercial contact identified yet — accessible relative to a global federation, but still a formal body.',
@@ -496,7 +521,7 @@ const batch3 = [
     contacts:[],
   },
   {
-    id:'motogp-see', name:'MotoGP Sports Entertainment Group (formerly Dorna Sports)', country:'Spain (global series)', industry:'Major Sporting Events — Motorsport',
+    id:'motogp-see',inFocus:true, name:'MotoGP Sports Entertainment Group (formerly Dorna Sports)', country:'Spain (global series)', industry:'Major Sporting Events — Motorsport',
     categories:['Content Retainer','Fan Engagement','Digital Transformation'],
     score:59, friction:'High',
     scaleCaution:true,
@@ -515,7 +540,7 @@ const batch3 = [
 
 const batch4 = [
   {
-    id:'cmc-markets-everton', name:'CMC Markets', country:'United Kingdom (partnership: Everton FC)', industry:'Brands Investing in Sport — Financial Services',
+    id:'cmc-markets-everton',inFocus:true, name:'CMC Markets', country:'United Kingdom (partnership: Everton FC)', industry:'Brands Investing in Sport — Financial Services',
     categories:['Brand Activation','Sponsorship','Content Retainer'],
     score:63, friction:'Medium',
     frictionReasoning:'Fresh front-of-shirt deal with no confirmed incumbent activation agency; Premier League context adds some competitive pressure, but the brand side often runs its own activation separately from the club\'s commercial department, which is more accessible than pitching the club itself.',
@@ -527,7 +552,7 @@ const batch4 = [
     contacts:[],
   },
   {
-    id:'revolut-audi-f1', name:'Revolut', country:'United Kingdom (partnership: Audi F1 Team)', industry:'Brands Investing in Sport — Fintech',
+    id:'revolut-audi-f1',inFocus:true, name:'Revolut', country:'United Kingdom (partnership: Audi F1 Team)', industry:'Brands Investing in Sport — Fintech',
     categories:['Fan Engagement','Content Retainer','Digital Transformation'],
     score:59, friction:'High',
     scaleCaution:true,
@@ -541,8 +566,134 @@ const batch4 = [
   }
 ];
 
-const batchScanCounts = {1:51, 2:38, 3:22, 4:16}; // organisations searched but not qualified, per batch
-const seedBatches = [ {n:1, data:batch1}, {n:2, data:batch2}, {n:3, data:batch3}, {n:4, data:batch4} ];
+const batch5 = [
+  {
+    id:'ellington-uae-padel', name:'Ellington Properties', country:'United Arab Emirates', industry:'Brands Investing in Sport — Real Estate', inFocus:true,
+    categories:['Brand Activation','Content Retainer','Event Content Production'],
+    score:72, friction:'Low',
+    frictionReasoning:'Real-estate developer entirely new to sports sponsorship, via a newly launched sports foundation with no existing content/activation agency in place.',
+    scoreBreakdown:{'Strategic Fit':80,'Buying Signal Strength':80,'Budget Fit':75,'Content Opportunity':85,'Digital Transformation Opportunity':45,'Ease of Access':65,'Decision Maker Identified':20,'Competitive Intensity (favourability)':65},
+    signals:[{text:'Ellington Properties became title sponsor of the UAE Padel Tour 2026, a 35-tournament nationwide series with the United Arab Emirates Padel Association, launched via its newly formed Ellington Sports Foundation.', source:'Arabian Business, January 28 2026', url:'https://www.trix20.com/blog-articles/ellington-properties-title-event-sponsorship-uae-padel-tour-2026'}],
+    whyPace:'A 35-event nationwide tour needs consistent, high-volume content and event coverage across many touchpoints — squarely PACE\'s Content at Scale and Event Content Production lines. Ellington is a real-estate developer, not a sports-marketing sophisticate, and its foundation is brand new, so there is no incumbent agency relationship to unseat.',
+    outreach:'Why now: newly launched sports foundation and a 35-event tour just getting underway, with content operations for the season likely still being built out. Signal: Ellington–UAE Padel Tour title sponsorship, January 2026. Service: Event Content Production + Content Retainer. First conversation: ask how Ellington Sports Foundation is currently covering the 35-event tour and whether a consistent content operation across all stops is in place yet.',
+    budgetEstimate:'CHF 40,000–100,000 (estimate; matches a season-long, multi-event content retainer).',
+    contacts:[],
+  },
+  {
+    id:'al-qadsiah-saudi', name:'Al-Qadsiah FC', country:'Saudi Arabia', industry:'Sports Ecosystem — Football (Saudi Pro League)', inFocus:true,
+    categories:['Content Retainer','Digital Transformation','Fan Engagement'],
+    score:71, friction:'Medium',
+    frictionReasoning:'Actively hiring for the role that would own this relationship — real near-term opening once filled, though Saudi football\'s fast-growing commercial market draws increasing agency interest.',
+    scoreBreakdown:{'Strategic Fit':80,'Buying Signal Strength':80,'Budget Fit':70,'Content Opportunity':80,'Digital Transformation Opportunity':60,'Ease of Access':55,'Decision Maker Identified':20,'Competitive Intensity (favourability)':60},
+    signals:[{text:'Actively recruiting for a Marketing Director role covering brand management, digital marketing, content strategy, fan engagement, campaign planning and international marketing initiatives.', source:'Futboljobs job listing', url:'https://futboljobs.com/en/job-offer/marketing-director-al-qadsiah-saudi-club-saudi-arabia-40576/'}],
+    whyPace:'An open Marketing Director mandate spanning content strategy and fan growth is a clean future entry point: once filled, a new hire typically reviews delivery partners within their first two quarters. Al-Qadsiah is a growing but not yet globally marquee Saudi Pro League club — realistic scale for a boutique partner rather than the giants (Al-Nassr, Al-Hilal) that dominate agency attention.',
+    outreach:'Why now: active hiring for the exact role that would own this relationship — worth tracking for the appointment, then approaching within the new hire\'s first quarter. Signal: live Marketing Director vacancy. Service: Content Retainer + Digital Transformation. No named contact yet — revisit once the role is filled.',
+    budgetEstimate:'CHF 40,000–100,000 (estimate; growing Saudi Pro League club scope).',
+    contacts:[],
+  },
+  {
+    id:'swiss-football-league', name:'Swiss Football League (SFL)', country:'Switzerland', industry:'Sports Governing Bodies — Football', inFocus:true,
+    categories:['Sponsorship','Digital Asset Management','Reporting & Insights'],
+    score:66, friction:'Low',
+    frictionReasoning:'Home-market organisation with no reported exclusive incumbent for inventory/content support; ongoing sponsorship sales activity signals real, active budget.',
+    scoreBreakdown:{'Strategic Fit':75,'Buying Signal Strength':60,'Budget Fit':80,'Content Opportunity':65,'Digital Transformation Opportunity':55,'Ease of Access':75,'Decision Maker Identified':20,'Competitive Intensity (favourability)':55},
+    signals:[{text:'The Swiss Super League (organised by the Swiss Football League) has signed new sponsorship deals including Meier Tobler and an extension with Molten as official match ball supplier, while exploring a global commercial rights sales agent relationship with Team Marketing.', source:'SportBusiness — Swiss Super League event page', url:'https://www.sportbusiness.com/event/swiss-super-league/'}],
+    whyPace:'A domestic Swiss rights holder actively selling sponsorship inventory is exactly the "digital inventory" and sponsorship execution work PACE already does — and being Zurich-based gives PACE a genuine access and relationship advantage over international agencies for a Swiss home-market account.',
+    outreach:'Why now: active sponsorship sales activity (Meier Tobler, Molten) shows real, current budget in motion. Signal: SportBusiness Swiss Super League coverage. Service: Sponsorship + Digital Asset Management. First conversation: ask how the league is currently managing sponsorship inventory and digital asset delivery across its commercial partners.',
+    budgetEstimate:'CHF 30,000–90,000 (estimate; domestic league scope).',
+    contacts:[],
+  },
+  {
+    id:'on-running', name:'On', country:'Switzerland', industry:'Fashion / Consumer Goods — Sportswear', inFocus:true, scaleCaution:true,
+    categories:['Content Retainer','Brand Activation','Digital Transformation'],
+    score:58, friction:'High',
+    frictionReasoning:'A large global brand with its own marketing infrastructure and likely existing agency relationships; realistic PACE access is a narrow, Swiss-market-specific slice, not the global mandate.',
+    scoreBreakdown:{'Strategic Fit':70,'Buying Signal Strength':70,'Budget Fit':35,'Content Opportunity':70,'Digital Transformation Opportunity':55,'Ease of Access':35,'Decision Maker Identified':30,'Competitive Intensity (favourability)':30},
+    signals:[
+      {text:'Became new technical sponsor of FIDAL, the Italian Athletics Federation, in a 2026-2029 partnership effective January 1, 2026.', source:'nss sports, February 20 2026', url:'https://www.nss-sports.com/en/lifestyle/44343/on-fidal-technical-sponsor-athletics-italy'},
+      {text:'Committed around CHF 20 million as the first private partner of the Swiss bid to host the 2038 Olympic and Paralympic Winter Games.', source:'SportBusiness — Switzerland geography page', url:'https://www.sportbusiness.com/geography/switzerland/'}
+    ],
+    whyPace:'Included with a scale caution: On is a Zurich-headquartered global brand actively expanding its sports sponsorship footprint, which gives PACE a genuine home-market relationship angle — but On\'s marketing operates at a scale that will draw major global agencies for anything beyond a narrowly scoped, Switzerland-specific project.',
+    outreach:'Why now: two fresh, unrelated sponsorship commitments in the same period signal an active sports-marketing expansion phase. Signal: FIDAL partnership + Swiss 2038 Olympic bid backing. Service: narrow, Switzerland-specific Content Retainer only. First conversation, if pursued: ask about the Swiss-market activation plans specifically for the 2038 bid partnership, rather than the global sponsorship portfolio.',
+    budgetEstimate:'CHF 20,000–60,000 (estimate; only a narrow Swiss-market slice is realistic, not the global mandate).',
+    contacts:[],
+  },
+  {
+    id:'swiss-2038-bid', name:'Switzerland 2038 Olympic & Paralympic Winter Games Bid', country:'Switzerland', industry:'Major Sporting Events — Olympic Bid', inFocus:true,
+    categories:['Event Content Production','Fan Engagement','Digital Transformation'],
+    score:61, friction:'Medium',
+    frictionReasoning:'Very early-stage national bid with no confirmed host decision yet; bid-committee budgets and structures are still forming, which cuts both ways — real access now, but genuine near-term need is limited.',
+    scoreBreakdown:{'Strategic Fit':80,'Buying Signal Strength':60,'Budget Fit':50,'Content Opportunity':70,'Digital Transformation Opportunity':50,'Ease of Access':50,'Decision Maker Identified':20,'Competitive Intensity (favourability)':55},
+    signals:[{text:'Crans-Montana has been lined up to host Alpine skiing as part of Switzerland\'s bid for the 2038 Olympic and Paralympic Winter Games, with sportswear brand On already committed as the first private partner.', source:'SportBusiness — Switzerland geography page', url:'https://www.sportbusiness.com/geography/switzerland/'}],
+    whyPace:'A home-country Olympic bid is about as natural a fit as exists for a Zurich-based sports consultancy — bid committees need public narrative, digital presence and fan-facing content years before a hosting decision. Flagged Medium rather than a top priority only because the bid is still very early-stage; worth establishing a relationship now rather than waiting.',
+    outreach:'Why now: early bid-phase organisations are actively shaping their narrative and public-facing identity — an early relationship is more valuable than a late one. Signal: On\'s CHF20m private-partner commitment, confirming the bid has real backing. Service: Event Content Production + Digital Transformation (narrative/identity phase). First conversation: ask who is currently leading public communications and content for the bid, and whether that function is resourced yet.',
+    budgetEstimate:'CHF 20,000–70,000 (estimate; early bid-phase narrative/content scope).',
+    contacts:[],
+  },
+  {
+    id:'fis-federation', name:'International Ski and Snowboard Federation (FIS)', country:'Switzerland', industry:'Sports Governing Bodies — Winter Sports', inFocus:true,
+    categories:['Content Retainer','Digital Transformation','Reporting & Insights'],
+    score:58, friction:'Medium',
+    frictionReasoning:'Federation is mid-leadership-transition, which creates both opportunity (new priorities being set) and uncertainty (decisions may be paused until leadership is settled).',
+    scoreBreakdown:{'Strategic Fit':70,'Buying Signal Strength':65,'Budget Fit':55,'Content Opportunity':60,'Digital Transformation Opportunity':50,'Ease of Access':45,'Decision Maker Identified':20,'Competitive Intensity (favourability)':45},
+    signals:[{text:'FIS CEO Urs Lehmann dramatically quit his role just days before Johan Eliasch stood for re-election as FIS president.', source:'SportBusiness — Switzerland geography page', url:'https://www.sportbusiness.com/geography/switzerland/'}],
+    whyPace:'A Swiss-headquartered winter-sports federation going through leadership change is worth establishing contact with now, ahead of whatever commercial/marketing priorities the next CEO sets — but this is a "build the relationship" entry rather than an immediate pitch, given the leadership uncertainty.',
+    outreach:'Why now: CEO departure ahead of a presidential re-election creates a leadership reset moment. Signal: Urs Lehmann departure, via SportBusiness. Service: Content Retainer + Digital Transformation. First conversation: hold until new leadership is confirmed, then ask about content/digital priorities for the next four-year cycle.',
+    budgetEstimate:'CHF 30,000–90,000 (estimate).',
+    contacts:[],
+  },
+  {
+    id:'icc-cwc-2027-tender', name:'ICC Men\'s Cricket World Cup 2027 (marketing/PR mandate)', country:'South Africa / Zimbabwe / Namibia', industry:'Major Sporting Events — Cricket', inFocus:true, scaleCaution:true,
+    categories:['Event Content Production','Brand Activation','Reporting & Insights'],
+    score:63, friction:'High',
+    frictionReasoning:'A genuinely open, competitive global tender — real access with no incumbent to displace — but the scale of a full ICC World Cup marketing mandate will draw major global sports-marketing agencies, and eligibility likely requires a large-event portfolio PACE may not fully match at prime-bidder level.',
+    scoreBreakdown:{'Strategic Fit':75,'Buying Signal Strength':90,'Budget Fit':25,'Content Opportunity':85,'Digital Transformation Opportunity':45,'Ease of Access':55,'Decision Maker Identified':30,'Competitive Intensity (favourability)':25},
+    signals:[{text:'The ICC opened a tender via its commercial subsidiary ICC Business Corporation for an integrated marketing and communications agency for the 2027 Men\'s Cricket World Cup, hosted across South Africa, Zimbabwe and Namibia, covering campaign strategy, content creation, milestone activations and media amplification, with prior Southern Africa experience cited as an advantage.', source:'SocialSamosa, August 2026', url:'https://www.socialsamosa.com/industry-updates/icc-invites-bids-marketing-pr-men-cricket-world-cup-2027-12238746'}],
+    whyPace:'The scope description reads almost exactly like PACE\'s service list (campaign strategy, content creation, milestone activations) and the tournament sits directly in the South Africa priority geography — but a full ICC World Cup mandate is a scale PACE should not bid to lead. Flagged as scale caution: realistic participation would be as a specialist subcontractor to a larger prime bidder with global event credentials, not as the lead applicant. Expressions of interest close 27 August 2026 — a hard, near-term deadline.',
+    outreach:'Why now: hard tender deadline of 27 August 2026 — action window is now, not later. Signal: ICC open RFP, via SocialSamosa. Service: Event Content Production (as a subcontracted specialist, not lead bidder). First move: identify which larger agencies are likely to bid as prime and explore a subcontracting/partnership conversation rather than a direct submission.',
+    budgetEstimate:'Likely CHF 300,000+ at prime-agency level (estimate) — well above PACE\'s target range; only realistic as a subcontracted role.',
+    contacts:[],
+  },
+  {
+    id:'radar-tyres-csa', name:'Radar Tyres', country:'South Africa (partnership: Cricket South Africa)', industry:'Brands Investing in Sport — Automotive/Industrial', inFocus:true,
+    categories:['Brand Activation','Content Retainer'],
+    score:61, friction:'Medium',
+    frictionReasoning:'A tyre brand new to cricket sponsorship with no reported incumbent activation partner, though South African cricket sponsorship activation has several established local agencies.',
+    scoreBreakdown:{'Strategic Fit':70,'Buying Signal Strength':65,'Budget Fit':70,'Content Opportunity':65,'Digital Transformation Opportunity':30,'Ease of Access':55,'Decision Maker Identified':20,'Competitive Intensity (favourability)':60},
+    signals:[{text:'Cricket South Africa struck a multi-year sponsorship deal with Radar Tyres, providing brand exposure on the national teams\' shirts during T20 matches.', source:'SportBusiness Sponsorship — South Africa geography page', url:'https://sponsorship.sportbusiness.com/geography/south-africa/'}],
+    whyPace:'A tyre brand stepping into national-team cricket sponsorship needs help translating shirt exposure into a credible fan narrative — a right-sized Brand Activation opportunity in the South Africa priority geography, with a brand unlikely to already have a specialist sports-content partner.',
+    outreach:'Why now: fresh multi-year national-team shirt deal with activation planning likely still forming. Signal: Radar Tyres–Cricket South Africa sponsorship, via SportBusiness Sponsorship. Service: Brand Activation + Content Retainer. First conversation: ask Radar Tyres\' marketing team how they plan to build fan-facing content around the national-team partnership.',
+    budgetEstimate:'CHF 25,000–70,000 (estimate).',
+    contacts:[],
+  },
+  {
+    id:'dublin-gaa-ptsb', name:'Dublin GAA', country:'Ireland', industry:'Sports Ecosystem — Gaelic Games', inFocus:true,
+    categories:['Sponsorship','Brand Activation','Community Management'],
+    score:60, friction:'Low',
+    frictionReasoning:'A regional sports body, more accessible than a national federation, with no reported exclusive incumbent for activation support around the new sponsorship.',
+    scoreBreakdown:{'Strategic Fit':65,'Buying Signal Strength':60,'Budget Fit':80,'Content Opportunity':60,'Digital Transformation Opportunity':30,'Ease of Access':65,'Decision Maker Identified':20,'Competitive Intensity (favourability)':60},
+    signals:[{text:'PTSB (permanent tsb) was announced as the new sponsor of the PTSB Dublin Leagues and Championships in a three-year partnership from 2026 to 2028.', source:'European Sponsorship Association — Member News', url:'https://sponsorship.org/category/press-releases/member-press-releases/'}],
+    whyPace:'A regional GAA county board is genuinely right-sized for a 30-person team — real, multi-year budget in place, community-rooted (a strong fit for PACE\'s Community Management line), and unlikely to be on the radar of large international sports agencies.',
+    outreach:'Why now: fresh three-year sponsorship just signed, with activation planning for the new partnership likely still being scoped. Signal: PTSB–Dublin GAA sponsorship, via European Sponsorship Association. Service: Brand Activation + Community Management. First conversation: ask how Dublin GAA plans to bring the PTSB partnership to life for members and fans across the three-year term.',
+    budgetEstimate:'CHF 20,000–50,000 (estimate; regional scope, well within the tightened budget range).',
+    contacts:[],
+  },
+  {
+    id:'uipm-federation', name:'Union Internationale de Pentathlon Moderne (UIPM)', country:'Monaco', industry:'Sports Governing Bodies — Modern Pentathlon', inFocus:true,
+    categories:['Content Retainer','Digital Transformation','Reporting & Insights'],
+    score:62, friction:'Medium',
+    frictionReasoning:'A small, formally run federation with an active tender culture (a positive access signal), though its most recent relevant mandate (media rights distribution) has already been awarded to another party.',
+    scoreBreakdown:{'Strategic Fit':65,'Buying Signal Strength':55,'Budget Fit':75,'Content Opportunity':65,'Digital Transformation Opportunity':55,'Ease of Access':60,'Decision Maker Identified':40,'Competitive Intensity (favourability)':55},
+    signals:[{text:'UIPM ran an open RFP for global media rights distribution across 2026-2028, ultimately appointing ICARUS Sports; the tender explicitly excluded production services, which UIPM retains or sources separately.', source:'SVG Europe, November 4 2025', url:'https://www.svgeurope.org/blog/headlines/uipm-opens-media-rights-distribution-tender-for-2026-2028-seasons/'}],
+    whyPace:'UIPM runs a genuinely open, formal tender process for its commercial mandates — a positive signal for a boutique partner\'s ability to compete on merit rather than relationships. Production services were explicitly excluded from its last tender, suggesting a separate, smaller-scale opportunity in exactly PACE\'s content/production wheelhouse.',
+    outreach:'Why now: an active procurement culture and a specifically-excluded production scope in the last RFP suggest a standalone opportunity exists. Signal: UIPM 2026-2028 media rights tender, via SVG Europe. Service: Event Content Production. First conversation: ask Florent Boas (TV & Media Operations Manager) how production services are currently resourced separately from the media rights distribution deal.',
+    budgetEstimate:'CHF 30,000–80,000 (estimate; small-federation production scope).',
+    contacts:[{name:'Florent Boas',email:null,title:'TV & Media Operations Manager',source:'SVG Europe (trade press, named in tender enquiry contact)',url:'https://www.svgeurope.org/blog/headlines/uipm-opens-media-rights-distribution-tender-for-2026-2028-seasons/',confidence:0.75,reason:'Named and titled as the official tender enquiry contact in trade press coverage. LinkedIn not independently verified. Direct email not publicly available (tender enquiries route through a distinct process, not a personal address).'}],
+  }
+];
+
+const batchScanCounts = {1:51, 2:38, 3:22, 4:16, 5:19}; // organisations searched but not qualified, per batch
+const seedBatches = [ {n:1, data:batch1}, {n:2, data:batch2}, {n:3, data:batch3}, {n:4, data:batch4}, {n:5, data:batch5} ];
 
 let opportunities = [];
 let meta = {batches:0, totalScanned:0, history:[]};
@@ -620,11 +771,12 @@ function trendArrow(o){
 function cardHtml(o){
   const flame = (o.score>90 && o.friction==='Low') ? '<div class="flame">🔥</div>' : '';
   const scaleBadge = o.scaleCaution ? `<span style="color:var(--amber);font-size:10px;font-weight:700;border:1px solid var(--amber);border-radius:4px;padding:1px 5px;margin-left:6px;" title="May exceed realistic capacity for a ~30-person delivery team">SCALE CAUTION</span>` : '';
+  const legacyBadge = (o.inFocus===false) ? `<span style="color:var(--text-faint);font-size:10px;font-weight:700;border:1px solid var(--text-faint);border-radius:4px;padding:1px 5px;margin-left:6px;" title="Outside current EU/MENA/South Africa, CHF20-100k focus">OUT OF CURRENT FOCUS</span>` : '';
   return `<div class="card" onclick="openDetail('${o.id}')">
     ${flame}
     <div class="card-top">
       <div>
-        <div class="card-name">${o.name}${trendArrow(o)}${scaleBadge}</div>
+        <div class="card-name">${o.name}${trendArrow(o)}${scaleBadge}${legacyBadge}</div>
         <div class="card-meta">${o.country} · ${o.industry}</div>
       </div>
       ${scorePill(o.score)}
@@ -652,12 +804,14 @@ function renderOpportunities(){
   const category = document.getElementById('fCategory').value;
   const friction = document.getElementById('fFriction').value;
   const sort = document.getElementById('fSort').value;
+  const focusOnly = document.getElementById('fFocusOnly').checked;
 
   let list = opportunities.filter(o=>{
     let match = true;
+    if(focusOnly && o.inFocus===false) match=false;
     if(q){
       const hay = (o.name+' '+o.industry+' '+o.signals.map(s=>s.text).join(' ')).toLowerCase();
-      match = hay.includes(q);
+      match = match && hay.includes(q);
     }
     if(country && o.country!==country) match=false;
     if(category && !o.categories.includes(category)) match=false;
@@ -725,17 +879,19 @@ function renderMap(){
 }
 
 function renderKpis(){
+  const inFocusList = opportunities.filter(o=>o.inFocus!==false);
   document.getElementById('kpiScanned').textContent = meta.totalScanned || totalScannedThisBatch;
-  document.getElementById('kpiQualified').textContent = opportunities.length;
+  document.getElementById('kpiQualified').textContent = inFocusList.length + ' in focus';
   document.getElementById('kpiHighPriority').textContent = opportunities.filter(o=>o.score>90 && o.friction==='Low').length;
   const contactCount = opportunities.reduce((sum,o)=>sum+(o.contacts?o.contacts.length:0),0);
   document.getElementById('kpiContacts').textContent = contactCount;
-  document.getElementById('batchNote').innerHTML = `<b>Batch ${meta.batches||1} of an ongoing scan.</b> ${meta.totalScanned||totalScannedThisBatch} organisations evaluated cumulatively toward the 500-organisation research universe; ${opportunities.length} have met the evidence threshold so far. Data persists in this dashboard — run another batch any time to continue toward 500 without losing this history.`;
-  document.getElementById('railFoot').textContent = `Batch ${meta.batches||1} · ${opportunities.length} qualified · updated ${new Date().toISOString().slice(0,10)}`;
+  document.getElementById('batchNote').innerHTML = `<b>Batch ${meta.batches||1} of an ongoing scan.</b> ${meta.totalScanned||totalScannedThisBatch} organisations evaluated cumulatively; ${opportunities.length} have met the evidence threshold overall, of which <b style="color:var(--text)">${inFocusList.length} are in current focus</b> (Europe/MENA/South Africa, CHF 20,000–100,000). Earlier North America and out-of-range entries remain logged for history but are excluded from the focus view by default. Data persists in this dashboard — run another batch any time to continue without losing this history.`;
+  document.getElementById('railFoot').textContent = `Batch ${meta.batches||1} · ${inFocusList.length} in focus (${opportunities.length} total) · updated ${new Date().toISOString().slice(0,10)}`;
 }
 
 function renderTopCards(){
-  const top = [...opportunities].sort((a,b)=>b.score-a.score).slice(0,6);
+  const inFocusList = opportunities.filter(o=>o.inFocus!==false);
+  const top = [...inFocusList].sort((a,b)=>b.score-a.score).slice(0,6);
   document.getElementById('topCards').innerHTML = top.map(cardHtml).join('');
 }
 
@@ -828,7 +984,7 @@ document.querySelectorAll('nav button').forEach(btn=>{
     document.getElementById('view-'+btn.dataset.view).classList.add('active');
   });
 });
-['searchBox','fCountry','fCategory','fFriction','fSort'].forEach(id=>{
+['searchBox','fCountry','fCategory','fFriction','fSort','fFocusOnly'].forEach(id=>{
   document.getElementById(id).addEventListener('input', renderOpportunities);
   document.getElementById(id).addEventListener('change', renderOpportunities);
 });
