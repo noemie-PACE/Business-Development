@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <title>PACE — BD Intelligence Engine</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- PACE brand font is Arial (per company slidemaster theme) — no external font load needed -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Roboto:wght@400;500;600&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
     /* PACE brand palette — extracted directly from PACE_Slidemaster_2025 theme */
@@ -20,9 +21,9 @@
     --coral:#FF5D5D;       /* functional negative (not in brand theme, kept minimal) */
     --amber:#0097A7;       /* PACE secondary accent (teal, from theme follow-link color) */
     --blue:#0097A7;
-    --font-display:'Arial','Helvetica Neue',Arial,sans-serif;
-    --font-body:'Arial','Helvetica Neue',Arial,sans-serif;
-    --font-mono:'Arial Narrow','Arial',monospace;
+    --font-display:'Archivo','Helvetica Neue',Arial,sans-serif;
+    --font-body:'Roboto','Helvetica Neue',Arial,sans-serif;
+    --font-mono:'Roboto Mono','Roboto',monospace;
   }
   *{box-sizing:border-box;}
   body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:14px;line-height:1.5;}
@@ -164,7 +165,7 @@
     <nav>
       <button data-view="home" class="active"><span class="dot"></span>Home</button>
       <button data-view="opportunities"><span class="dot"></span>Opportunities</button>
-      <button data-view="swiss-events"><span class="dot"></span>Swiss Events (1YTG)</button>
+      <button data-view="swiss-events"><span class="dot"></span>Swiss Events</button>
       <button data-view="contacts"><span class="dot"></span>Contacts</button>
       <button data-view="trends"><span class="dot"></span>Market Trends</button>
       <button data-view="map"><span class="dot"></span>Geography</button>
@@ -191,7 +192,7 @@
 
       <div class="section">
         <h2>Executive Summary</h2>
-        <p style="color:var(--text-dim);font-size:13.5px;max-width:720px;">Batch 1 focused on Priority-1 signals: brands and rights holders in Europe/North America showing fresh commercial or marketing leadership change, digital transformation spend, or women's-sport investment. Mega-scale deals (Real Madrid–Adidas, PSG–Qatar Airways, Unilever's World Cup activation) were <b style="color:var(--text)">deliberately excluded</b> — they are already owned by Wasserman, Two Circles or in-house teams operating at a scale PACE does not compete at. The list below favours organisations where PACE's agile, execution-first model beats a large consultancy or holding-company agency on speed and fit, not on headcount.</p>
+        <p style="color:var(--text-dim);font-size:13.5px;max-width:720px;">Batch 1 focused on Priority-1 signals: brands and rights holders showing fresh commercial or marketing leadership change, digital transformation spend, or women's-sport investment. Mega-scale deals (Real Madrid–Adidas, PSG–Qatar Airways, Unilever's World Cup activation) were <b style="color:var(--text)">deliberately excluded</b> — they are already owned by Wasserman, Two Circles or in-house teams operating at a scale PACE does not compete at. From batch 5 onward, scope was tightened further to Europe/MENA/South Africa only, CHF 20,000–100,000 budgets. The list below favours organisations where PACE's agile, execution-first model beats a large consultancy or holding-company agency on speed and fit, not on headcount.</p>
       </div>
 
       <div class="section">
@@ -204,6 +205,7 @@
     <div class="view" id="view-swiss-events">
       <h1>Switzerland — Future Events &amp; 1YTG Windows</h1>
       <p class="lede">Confirmed and bid-stage sporting events hosted in Switzerland, screened for a "1 Year To Go" (1YTG) narrative-campaign pitch window. As of today (10 August 2026), a genuine 1YTG moment falls on events happening around August 2027 — events already inside 12 months out have likely passed the classic 1YTG anchor, but remain live opportunities under a different framing.</p>
+      <div class="note-box"><b>Refreshed weekly</b> alongside the opportunity batches — new host announcements and date confirmations are added here each run, not just at setup. Last screened: <span id="swissEventsDate"></span>.</div>
       <div class="note-box"><b>Reading this table:</b> "1YTG window" marks whether the one-year-out anniversary of the event falls in the future (a live pitch opportunity) or has already passed (event is closer than 12 months away, so the pitch angle shifts to "final countdown" / on-the-ground activation rather than 1YTG).</div>
       <table>
         <thead><tr><th>Event</th><th>Dates</th><th>Host / Organiser</th><th>1YTG Window</th><th>Source</th></tr></thead>
@@ -277,7 +279,7 @@
     <!-- MAP -->
     <div class="view" id="view-map">
       <h1>Geography</h1>
-      <p class="lede">Opportunity density by PACE's stated regional priority. A full interactive map (pins, routing) needs a connected mapping tool — this view reflects the batch's actual scan distribution.</p>
+      <p class="lede">Opportunity density across PACE's current focus regions — Europe, MENA and South Africa. North America is no longer tracked. A full interactive map (pins, routing) needs a connected mapping tool — this view reflects the batch's actual scan distribution.</p>
       <div class="region-map" id="regionMap"></div>
     </div>
 
@@ -305,7 +307,7 @@
         • "Competitive Intensity" is scored for favourability to PACE (low intensity = high score), not raw market competitiveness.<br>
         • Weekly persistence depends on this artifact's storage — re-open the same dashboard next week and ask for a new batch to keep the history intact.</p>
         <h3>Scope recalibration (from batch 3 onward)</h3>
-        <p>Two changes now apply to all future batches: (1) <b style="color:var(--text)">North America is paused</b> as a priority region — batch 2's NA opportunities remain in the database for reference but new scanning concentrates on Europe first, then Northern/South Africa. (2) <b style="color:var(--text)">Team-size realism</b> — PACE is a ~30-person team, so organisations whose scale would put PACE up against holding-company agencies on a like-for-like service breadth (e.g. PUMA, MLS/SUM, MotoGP SEG) are flagged with a "scale caution" rather than excluded outright, since the underlying signal can still be genuine even where the realistic engagement is a narrow, specialist slice rather than the full mandate.</p>
+        <p>Two changes now apply to all future batches: (1) <b style="color:var(--text)">North America has been removed entirely</b> as a scanning region — it is not tracked, not scored, and prior North American entries have been purged from the database rather than merely deprioritised. Scope is now Europe, MENA and South Africa only, with budgets scoped to CHF 20,000–100,000. (2) <b style="color:var(--text)">Team-size realism</b> — PACE is a ~30-person team, so organisations whose scale would put PACE up against holding-company agencies on a like-for-like service breadth (e.g. On, ICC Cricket World Cup 2027, MotoGP SEG) are flagged with a "scale caution" rather than excluded outright, since the underlying signal can still be genuine even where the realistic engagement is a narrow, specialist slice rather than the full mandate.</p>
       </div>
     </div>
 
@@ -441,71 +443,6 @@ const batch1 = [
   }
 ];
 
-const batch2 = [
-  {
-    id:'nwsl',inFocus:false, name:'National Women\'s Soccer League (NWSL)', country:'United States', industry:'Sports Ecosystem — Women\'s Football',
-    categories:['Fan Engagement','Audience Growth','Commercial Strategy','Sponsorship'],
-    score:75, friction:'Medium',
-    frictionReasoning:'League-office scale with a formal commercial function; likely to run structured agency selection, though the dual fresh hires create a genuine open window for new partners.',
-    scoreBreakdown:{'Strategic Fit':85,'Buying Signal Strength':85,'Budget Fit':65,'Content Opportunity':80,'Digital Transformation Opportunity':55,'Ease of Access':45,'Decision Maker Identified':90,'Competitive Intensity (favourability)':45},
-    signals:[{text:'Hired Brian Kelly as Chief Commercial Officer and Rachel Epstein as Chief Marketing Officer at a moment of league growth, following record attendance (63,004 at Denver Summit FC\'s home opener) and expanding fan engagement.', source:'Coliseum, April 17 2026', url:'https://www.coliseum-online.com/nwsl-top-hires-to-shape-next-chapter-of-league/'}],
-    whyPace:'Two fresh C-suite mandates naming audience connection, fandom growth and storytelling as explicit priorities — a direct match to PACE\'s Fan Engagement and Audience Growth lines. Women\'s football is also a stated PACE priority sector. The realistic PACE entry is a scoped content/fan-engagement workstream alongside the league\'s larger commercial-ecosystem build, not the entire commercial mandate, which larger agencies will also pitch for.',
-    outreach:'Why now: brand-new CCO and CMO both explicitly tasked with growth, storytelling and audience connection. Signal: Brian Kelly/Rachel Epstein hires, April 2026. Service: Fan Engagement + Audience Growth. First conversation: ask how the league is translating record attendance into an always-on content operation across clubs, distinct from national broadcast marketing.',
-    budgetEstimate:'CHF 150,000–400,000 (estimate; league-level engagements typically sit at the upper end of PACE\'s range).',
-    contacts:[
-      {name:'Rachel Epstein',email:null,title:'Chief Marketing Officer',source:'Coliseum / NWSLsoccer.com official announcement',url:'https://www.nwslsoccer.com/news/national-women-s-soccer-league-names-new-chief-commercial-and-chief-marketing-officers',confidence:0.8,reason:'Named and titled in the league\'s own official news release. Held below 0.90 pending independent LinkedIn verification.'},
-      {name:'Brian Kelly',email:null,title:'Chief Commercial Officer',source:'Coliseum / NWSLsoccer.com official announcement',url:'https://www.nwslsoccer.com/news/national-women-s-soccer-league-names-new-chief-commercial-and-chief-marketing-officers',confidence:0.8,reason:'Named and titled in the league\'s own official news release. Held below 0.90 pending independent LinkedIn verification.'}
-    ],
-  },
-  {
-    id:'target-sports-usa',inFocus:false, name:'Target Sports USA', country:'United States', industry:'Consumer Goods — Shooting Sports Retail',
-    categories:['Content Retainer','Audience Growth','Digital Transformation'],
-    score:73, friction:'Low',
-    frictionReasoning:'Niche category retailer, not typically served by major sports-marketing holding agencies; fresh CMO mandate suggests an open build phase rather than a defended incumbent relationship.',
-    scoreBreakdown:{'Strategic Fit':70,'Buying Signal Strength':75,'Budget Fit':75,'Content Opportunity':80,'Digital Transformation Opportunity':70,'Ease of Access':65,'Decision Maker Identified':80,'Competitive Intensity (favourability)':65},
-    signals:[{text:'Appointed Steven Blinn as Chief Marketing Officer, tasked with overseeing ecommerce, digital growth, brand development, customer engagement, social media, content creation and emerging AI initiatives, as the company expands its digital presence.', source:'The Outdoor Wire, May 8 2026', url:'https://www.theoutdoorwire.com/releases/2026/05/target-sports-usa-announces-new-chief-marketing-officer-steven-blinn/'}],
-    whyPace:'The mandate explicitly names content creation and digital growth alongside AI-assisted scaling — squarely PACE\'s Content at Scale and Always-on Content Operations lines, in a category (shooting sports retail) that sits outside where Two Circles, Wasserman or SPORTFIVE typically compete. Lower brand-recognition category means less competitive noise around the account.',
-    outreach:'Why now: fresh CMO explicitly building out digital/content/AI capability. Signal: Steven Blinn appointment, May 2026. Service: Content at Scale + Digital Transformation. First conversation: ask what "digital growth" looks like operationally today — team size, current content cadence — before proposing a scaled production model.',
-    budgetEstimate:'CHF 60,000–180,000 (estimate; mid-size specialty retailer content/digital retainer).',
-    contacts:[{name:'Steven Blinn',email:null,title:'Chief Marketing Officer',source:'The Outdoor Wire (official press release)',url:'https://www.theoutdoorwire.com/releases/2026/05/target-sports-usa-announces-new-chief-marketing-officer-steven-blinn/',confidence:0.8,reason:'Named and titled in official press release with detailed mandate. Held below 0.90 pending independent LinkedIn verification.'}],
-  },
-  {
-    id:'yoggies-gotham',inFocus:false, name:'Yoggies (Nature\'s Garden)', country:'United States (partnership: Gotham FC / NWSL)', industry:'Brands Investing in Sport — Food & Beverage',
-    categories:['Brand Activation','Sponsorship','Content Retainer'],
-    score:69, friction:'Low',
-    frictionReasoning:'Emerging snack brand entirely new to sports sponsorship, with no existing sports-marketing agency of record to displace.',
-    scoreBreakdown:{'Strategic Fit':75,'Buying Signal Strength':75,'Budget Fit':75,'Content Opportunity':75,'Digital Transformation Opportunity':40,'Ease of Access':75,'Decision Maker Identified':20,'Competitive Intensity (favourability)':80},
-    signals:[{text:'Nature\'s Garden and its emerging snack brand Yoggies signed a new multiyear partnership naming it the Official Better-For-You Snack Partner of Gotham FC.', source:'Sportico — Transactions Roundup, June 26 2026', url:'https://www.sportico.com/personalities/people/2026/sportico-transactions-moves-mergers-roundup-june-26-1234937180/'}],
-    whyPace:'Same pattern as the Clickhouse/Fulham signal in batch 1: a brand new to sports sponsorship, in women\'s sport specifically, will need help activating the deal for fans in year one — exactly PACE\'s Brand Activation and Event Content Production lines, at a scale too small for the large holding-company agencies to prioritise.',
-    outreach:'Why now: first-ever sports sponsorship for an emerging snack brand, signed this month. Signal: Nature\'s Garden/Yoggies–Gotham FC partnership, reported June 26 2026. Service: Brand Activation + Content Retainer. First conversation: ask Nature\'s Garden\'s marketing team how they plan to bring the Gotham FC partnership to life for fans beyond a jersey mark.',
-    budgetEstimate:'CHF 50,000–120,000 (estimate; first-year activation budget for an emerging challenger brand).',
-    contacts:[],
-  },
-  {
-    id:'dallas-mavericks',inFocus:false, name:'Dallas Mavericks', country:'United States', industry:'Sports Ecosystem — Basketball (NBA)',
-    categories:['Fan Engagement','Content Retainer','Brand Activation','Audience Growth'],
-    score:68, friction:'Medium',
-    frictionReasoning:'NBA franchise with an established marketing department; new CMO will likely review the agency roster but is also likely to run a structured process.',
-    scoreBreakdown:{'Strategic Fit':75,'Buying Signal Strength':80,'Budget Fit':65,'Content Opportunity':70,'Digital Transformation Opportunity':40,'Ease of Access':45,'Decision Maker Identified':90,'Competitive Intensity (favourability)':45},
-    signals:[{text:'Appointed James Ruth as Chief Marketing Officer, tasked with brand strategy, domestic and international marketing, in-game experience, merchandise and performance marketing; he previously held the same role with the Tampa Bay Buccaneers, Austin FC, and as VP of marketing properties at MLS.', source:'D CEO Magazine, June 22 2026', url:'https://www.dmagazine.com/business-economy/2026/06/dallas-mavericks-appoint-former-mls-nfl-exec-as-chief-marketing-officer/'}],
-    whyPace:'A new CMO with a multi-league marketing background and an explicit "international marketing" and "in-game experience" mandate is a natural moment to review content and fan-engagement delivery partners. PACE\'s realistic angle is a scoped in-game/content engagement, not the full brand mandate, which NBA-level agencies will also compete for.',
-    outreach:'Why now: fresh CMO mandate spanning international marketing and in-game experience. Signal: James Ruth appointment, June 2026. Service: Fan Engagement + Content Retainer. First conversation: ask how international audience growth is being resourced today, since that is often underserved relative to domestic marketing.',
-    budgetEstimate:'CHF 100,000–300,000 (estimate; NBA franchise scoped engagement).',
-    contacts:[{name:'James Ruth',email:null,title:'Chief Marketing Officer',source:'D CEO Magazine (trade press, detailed bio)',url:'https://www.dmagazine.com/business-economy/2026/06/dallas-mavericks-appoint-former-mls-nfl-exec-as-chief-marketing-officer/',confidence:0.8,reason:'Named, titled and biography-verified via named trade-press authors. Held below 0.90 pending independent LinkedIn verification.'}],
-  },
-  {
-    id:'mls',inFocus:false, name:'Major League Soccer (MLS) / Soccer United Marketing', country:'United States', industry:'Sports Ecosystem — Football (Soccer)',
-    categories:['Fan Engagement','Audience Growth','Content Retainer','Sponsorship'],
-    score:65, friction:'High',
-    frictionReasoning:'League of major scale during its highest-visibility year (2026 World Cup); commercial and marketing functions are large and well-served by big holding-company agencies already.',
-    scoreBreakdown:{'Strategic Fit':75,'Buying Signal Strength':75,'Budget Fit':55,'Content Opportunity':70,'Digital Transformation Opportunity':50,'Ease of Access':35,'Decision Maker Identified':85,'Competitive Intensity (favourability)':30},
-    signals:[{text:'Named Radhika Duggal as SVP & Chief Marketing Officer of MLS and Soccer United Marketing as the league approaches the 2026 FIFA World Cup, tasked with "powerful storytelling and data-driven activation."', source:'MLSSoccer.com official announcement', url:'https://www.mlssoccer.com/news/radhika-duggal-named-svp-chief-marketing-officer-of-major-league-soccer-and-soccer-united-marketing'}],
-    whyPace:'Genuine, fresh, well-sourced signal, but included at lower priority: MLS/SUM operates at a scale where Two Circles, Wasserman and major holding companies already hold significant retained work, especially around the World Cup moment. Realistic PACE entry, if any, would be a narrow regional or club-level execution project rather than the league mandate.',
-    outreach:'Why now: new CMO explicitly focused on storytelling and data-driven activation ahead of the League\'s highest-visibility year — worth monitoring for club-level or regional execution gaps rather than pitching the league mandate directly.',
-    budgetEstimate:'CHF 200,000–500,000+ (estimate; likely exceeds PACE\'s typical sweet spot at league level).',
-    contacts:[{name:'Radhika Duggal',email:null,title:'SVP & Chief Marketing Officer, MLS and Soccer United Marketing',source:'MLSSoccer.com (official league announcement)',url:'https://www.mlssoccer.com/news/radhika-duggal-named-svp-chief-marketing-officer-of-major-league-soccer-and-soccer-united-marketing',confidence:0.85,reason:'Confirmed via the league\'s own official announcement. Held below 0.90 pending independent LinkedIn verification.'}],
-  }
-];
 
 const batch3 = [
   {
@@ -692,8 +629,11 @@ const batch5 = [
   }
 ];
 
-const batchScanCounts = {1:51, 2:38, 3:22, 4:16, 5:19}; // organisations searched but not qualified, per batch
-const seedBatches = [ {n:1, data:batch1}, {n:2, data:batch2}, {n:3, data:batch3}, {n:4, data:batch4}, {n:5, data:batch5} ];
+const batchScanCounts = {1:51, 3:22, 4:16, 5:19}; // organisations searched but not qualified, per batch
+const seedBatches = [ {n:1, data:batch1}, {n:3, data:batch3}, {n:4, data:batch4}, {n:5, data:batch5} ];
+// North America is out of scope entirely (removed per instruction, not just paused) — these are purged
+// from any previously-persisted storage on load, regardless of how they got there.
+const removedIds = ['nwsl','target-sports-usa','yoggies-gotham','dallas-mavericks','mls'];
 
 let opportunities = [];
 let meta = {batches:0, totalScanned:0, history:[]};
@@ -742,7 +682,7 @@ async function loadData(){
     meta.history.push({batch:n, date:new Date().toISOString().slice(0,10), scanned:qualifiedThisBatch+(batchScanCounts[n]||0), qualified:qualifiedThisBatch});
   });
 
-  opportunities = Object.values(existingById);
+  opportunities = Object.values(existingById).filter(o => !removedIds.includes(o.id));
 
   try{
     await window.storage.set(STORAGE_KEY, JSON.stringify(opportunities));
@@ -861,11 +801,13 @@ function renderTrends(){
 }
 
 function renderMap(){
-  const regions = {'Europe':0,'North America':0,'Africa / Other':0};
+  const regions = {'Europe':0,'MENA':0,'South Africa':0};
+  const menaCountries = ['saudi arabia','uae','united arab emirates','qatar','egypt','morocco'];
   opportunities.forEach(o=>{
+    if(o.inFocus===false) return; // out-of-focus legacy entries excluded from the geography view
     const c = o.country.toLowerCase();
-    if(c.includes('united states')||c.includes('canada')) regions['North America']++;
-    else if(c.includes('africa')) regions['Africa / Other']++;
+    if(c.includes('south africa')) regions['South Africa']++;
+    else if(menaCountries.some(m=>c.includes(m))) regions['MENA']++;
     else regions['Europe']++;
   });
   const max = Math.max(...Object.values(regions),1);
@@ -885,7 +827,7 @@ function renderKpis(){
   document.getElementById('kpiHighPriority').textContent = opportunities.filter(o=>o.score>90 && o.friction==='Low').length;
   const contactCount = opportunities.reduce((sum,o)=>sum+(o.contacts?o.contacts.length:0),0);
   document.getElementById('kpiContacts').textContent = contactCount;
-  document.getElementById('batchNote').innerHTML = `<b>Batch ${meta.batches||1} of an ongoing scan.</b> ${meta.totalScanned||totalScannedThisBatch} organisations evaluated cumulatively; ${opportunities.length} have met the evidence threshold overall, of which <b style="color:var(--text)">${inFocusList.length} are in current focus</b> (Europe/MENA/South Africa, CHF 20,000–100,000). Earlier North America and out-of-range entries remain logged for history but are excluded from the focus view by default. Data persists in this dashboard — run another batch any time to continue without losing this history.`;
+  document.getElementById('batchNote').innerHTML = `<b>Batch ${meta.batches||1} of an ongoing scan.</b> ${meta.totalScanned||totalScannedThisBatch} organisations evaluated cumulatively; ${opportunities.length} have met the evidence threshold overall, of which <b style="color:var(--text)">${inFocusList.length} are in current focus</b> (Europe/MENA/South Africa, CHF 20,000–100,000). North America has been removed entirely and is no longer tracked. Some out-of-range legacy entries remain logged for history but are excluded from the focus view by default. Data persists in this dashboard — run another batch any time to continue without losing this history.`;
   document.getElementById('railFoot').textContent = `Batch ${meta.batches||1} · ${inFocusList.length} in focus (${opportunities.length} total) · updated ${new Date().toISOString().slice(0,10)}`;
 }
 
@@ -973,6 +915,8 @@ function render(){
   renderContacts();
   renderTrends();
   renderMap();
+  const swissDateEl = document.getElementById('swissEventsDate');
+  if(swissDateEl) swissDateEl.textContent = new Date().toISOString().slice(0,10);
 }
 
 // nav
