@@ -196,7 +196,12 @@
       </div>
 
       <div class="section">
-        <h2>Top Opportunities This Batch</h2>
+        <h2 id="newBatchHeading">New This Batch</h2>
+        <div class="cards" id="newBatchCards"></div>
+      </div>
+
+      <div class="section">
+        <h2>Top Opportunities Overall</h2>
         <div class="cards" id="topCards"></div>
       </div>
     </div>
@@ -204,22 +209,38 @@
     <!-- SWISS EVENTS -->
     <div class="view" id="view-swiss-events">
       <h1>Switzerland — Future Events &amp; 1YTG Windows</h1>
-      <p class="lede">Confirmed and bid-stage sporting events hosted in Switzerland, screened for a "1 Year To Go" (1YTG) narrative-campaign pitch window. A 1YTG campaign has to be planned and sold in <b style="color:var(--text)">before</b> the actual 12-month mark — so as of today (10 August 2026), the events worth pursuing are ones happening <b style="color:var(--text)">more than 12 months from now</b> (roughly after August 2027), leaving PACE lead time to pitch and prepare ahead of the anniversary itself. Events already inside 12 months out have missed that window entirely — the 1YTG moment has effectively already passed, even if the event hasn't happened yet.</p>
-      <div class="note-box"><b>Refreshed weekly</b> alongside the opportunity batches — new host announcements and date confirmations are added here each run, not just at setup. Last screened: <span id="swissEventsDate"></span>.</div>
-      <div class="note-box"><b>Reading this table:</b> "1YTG window" marks whether there's still more than 12 months between today and the event — meaning PACE has runway to pitch and plan a 1YTG campaign before the anniversary hits. If the event is already inside 12 months out, that window has closed (the campaign should have been sold in and built by now), so the angle shifts to "final countdown" / on-the-ground activation instead.</div>
-      <table>
-        <thead><tr><th>Event</th><th>Dates</th><th>Host / Organiser</th><th>1YTG Window</th><th>Source</th></tr></thead>
-        <tbody>
-          <tr><td>EuroBeachVolley 2027 (European Beach Volleyball Championships)</td><td>2027 (exact dates TBC)</td><td>Swiss Volley &amp; Sports Events Gstaad (SEG), with CEV</td><td class="empty-field">TBC — only a live 1YTG window if the event lands after ~August 2027; confirm exact dates with organiser before pitching</td><td><a class="src" href="https://www.beachgstaad.ch/en/news-articles/em-2027" target="_blank">Beach Gstaad</a></td></tr>
-          <tr><td>European Aquatics Junior Open Water Swimming Championships</td><td>16–19 June 2027</td><td>Swiss Aquatics</td><td>Passed (1YTG was ~June 2026) — pitch as final-countdown/on-site activation instead</td><td><a class="src" href="https://europeanaquatics.org/switzerland-to-host-european-aquatics-junior-open-water-swimming-championships-2027/" target="_blank">European Aquatics</a></td></tr>
-          <tr><td>FIS Alpine Skiing World Championships</td><td>1–14 February 2027</td><td>Crans-Montana / Swiss-Ski</td><td>Passed (1YTG was ~February 2026) — pitch as final-countdown/on-site activation instead</td><td><a class="src" href="https://www.scoreandchange.com/sports_events/" target="_blank">Score and Change</a></td></tr>
-          <tr><td>ISU European Figure Skating Championships</td><td>27–31 January 2027</td><td>Lausanne</td><td>Passed (1YTG was ~January 2026) — pitch as final-countdown/on-site activation instead</td><td><a class="src" href="https://www.scoreandchange.com/sports_events/" target="_blank">Score and Change</a></td></tr>
-          <tr><td>Switzerland 2038 Olympic &amp; Paralympic Winter Games (bid stage)</td><td>Bid stage — host decision not yet made</td><td>Swiss Olympic / national bid committee</td><td>Far out — not a 1YTG moment yet, but an early-relationship opportunity now (see Opportunities)</td><td><a class="src" href="https://www.sportbusiness.com/geography/switzerland/" target="_blank">SportBusiness</a></td></tr>
-        </tbody>
-      </table>
-      <div class="section" style="margin-top:24px;">
+      <p class="lede">Confirmed and bid-stage sporting events hosted in Switzerland, screened roughly 1–5 years out. A 1YTG campaign has to be planned and sold in <b style="color:var(--text)">before</b> the actual 12-month mark — so the ideal window is an event that's currently <b style="color:var(--text)">more than 12 months away</b> (giving PACE runway to pitch and prepare). Events already inside 12 months out are shown too, but flagged separately: their 1YTG window has closed, even though the event itself hasn't happened yet.</p>
+      <div class="note-box"><b>Refreshed weekly</b> alongside the opportunity batches — new host announcements, date confirmations, and events newly crossing the 12-month line are added here each run. Last screened: <span id="swissEventsDate"></span>.</div>
+
+      <div class="section">
+        <h2>✅ Ideal 1YTG Window — more than 12 months out</h2>
+        <table>
+          <thead><tr><th>Event</th><th>Dates</th><th>Host / Organiser</th><th>Time Away</th><th>Source</th></tr></thead>
+          <tbody>
+            <tr><td>Women's Ice Hockey World Championship 2028</td><td>November 2028</td><td>Swiss Ice Hockey (awarded by IIHF)</td><td>~2.3 years — 1YTG mark falls ~November 2027; plenty of runway to pitch now</td><td><a class="src" href="https://www.bluewin.ch/en/sport/womens-ice-hockey-world-championship-2028-in-switzerland-3254836.html" target="_blank">blue News</a></td></tr>
+            <tr><td>Special Olympics World Winter Games Switzerland 2029</td><td>10–17 March 2029</td><td>Special Olympics Switzerland; opening ceremony in Zurich, sporting events in Graubünden</td><td>~2.6 years — 1YTG mark falls ~March 2028; strong long-lead fit given the Zurich opening ceremony</td><td><a class="src" href="https://www.specialolympics.org/about/press-releases/when-sport-brings-people-together-visit-marks-key-milestone-toward-the-special-olympics-world-winter-games-switzerland-2029" target="_blank">Special Olympics International</a></td></tr>
+            <tr><td>Switzerland 2038 Olympic &amp; Paralympic Winter Games (bid stage)</td><td>Bid stage — host decision not yet made</td><td>Swiss Olympic / national bid committee</td><td>~12 years — far beyond a 1YTG framing, but an early-relationship opportunity now (see Opportunities)</td><td><a class="src" href="https://www.sportbusiness.com/geography/switzerland/" target="_blank">SportBusiness</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section">
+        <h2 style="color:var(--coral);">⚠️ Flagged — window closing or already closed (12 months or less away)</h2>
+        <p style="color:var(--text-dim);font-size:12.5px;max-width:720px;margin-top:-6px;">These are real, confirmed events — but there is no longer enough runway for a proper 1YTG campaign. Flagged here so they aren't mistaken for a live 1YTG opportunity, and to prompt a different pitch angle (final-countdown / on-the-ground activation) if pursued at all.</p>
+        <table>
+          <thead><tr><th>Event</th><th>Dates</th><th>Host / Organiser</th><th>Status</th><th>Source</th></tr></thead>
+          <tbody>
+            <tr><td>ISU European Figure Skating Championships</td><td>27–31 January 2027</td><td>Lausanne</td><td class="empty-field">⚠️ ~5.5 months away — 1YTG window closed since ~January 2026</td><td><a class="src" href="https://www.scoreandchange.com/sports_events/" target="_blank">Score and Change</a></td></tr>
+            <tr><td>FIS Alpine Skiing World Championships</td><td>1–14 February 2027</td><td>Crans-Montana / Swiss-Ski</td><td class="empty-field">⚠️ ~6 months away — 1YTG window closed since ~February 2026</td><td><a class="src" href="https://www.scoreandchange.com/sports_events/" target="_blank">Score and Change</a></td></tr>
+            <tr><td>European Aquatics Junior Open Water Swimming Championships</td><td>16–19 June 2027</td><td>Swiss Aquatics</td><td class="empty-field">⚠️ ~10 months away — 1YTG window closed since ~June 2026</td><td><a class="src" href="https://europeanaquatics.org/switzerland-to-host-european-aquatics-junior-open-water-swimming-championships-2027/" target="_blank">European Aquatics</a></td></tr>
+            <tr><td>EuroBeachVolley 2027 (European Beach Volleyball Championships)</td><td>2027 (exact dates TBC)</td><td>Swiss Volley &amp; Sports Events Gstaad (SEG), with CEV</td><td class="empty-field">⚠️ Borderline — likely inside or very close to 12 months depending on exact date; confirm with organiser</td><td><a class="src" href="https://www.beachgstaad.ch/en/news-articles/em-2027" target="_blank">Beach Gstaad</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section">
         <h2>Assessment</h2>
-        <p style="color:var(--text-dim);font-size:13.5px;max-width:720px;">Of the confirmed 2027 events found this batch, none currently offer a live 1YTG window under the corrected rule (event must be more than 12 months out, i.e. land after roughly August 2027, to leave PACE time to pitch and plan before the anniversary) — Crans-Montana, Lausanne and the Swiss Aquatics championships are all already inside 12 months out, meaning the window to sell in a 1YTG campaign for them has closed. <b style="color:var(--text)">EuroBeachVolley Gstaad 2027's exact dates weren't confirmed in this search</b> — if it lands in autumn 2027 rather than summer, it would clear the 12-month threshold and be worth pitching now; this needs a direct check with Sports Events Gstaad before treating it as live. The Switzerland 2038 Olympic bid is the strongest genuine long-lead opportunity found — bid committees typically start building public narrative years before a hosting vote, so an early relationship (logged in Opportunities) is more valuable than waiting for a 1YTG moment that's over a decade away.</p>
+        <p style="color:var(--text-dim);font-size:13.5px;max-width:720px;">Two genuinely live 1YTG opportunities this batch: the <b style="color:var(--text)">Women's Ice Hockey World Championship 2028</b> and the <b style="color:var(--text)">Special Olympics World Winter Games Switzerland 2029</b> — both confirmed, both more than 12 months out, both with real runway to build a campaign before their respective 1YTG anniversaries. The Special Olympics Games is the stronger fit given its Zurich opening ceremony. Everything from the 2027 event cluster (figure skating, alpine skiing, open water swimming, and likely beach volleyball) has already missed its 1YTG window and is flagged accordingly — pursuing any of these now would mean pitching a different, more compressed activation angle, not a 1YTG campaign.</p>
       </div>
     </div>
 
@@ -279,7 +300,7 @@
     <!-- MAP -->
     <div class="view" id="view-map">
       <h1>Geography</h1>
-      <p class="lede">Opportunity density across PACE's current focus regions — Europe, MENA and South Africa. North America is no longer tracked. A full interactive map (pins, routing) needs a connected mapping tool — this view reflects the batch's actual scan distribution.</p>
+      <p class="lede">Opportunity density across PACE's current focus regions — Europe, MENA and South Africa. A full interactive map (pins, routing) needs a connected mapping tool — this view reflects the batch's actual scan distribution.</p>
       <div class="region-map" id="regionMap"></div>
     </div>
 
@@ -307,7 +328,7 @@
         • "Competitive Intensity" is scored for favourability to PACE (low intensity = high score), not raw market competitiveness.<br>
         • Weekly persistence depends on this artifact's storage — re-open the same dashboard next week and ask for a new batch to keep the history intact.</p>
         <h3>Scope recalibration (from batch 3 onward)</h3>
-        <p>Two changes now apply to all future batches: (1) <b style="color:var(--text)">North America has been removed entirely</b> as a scanning region — it is not tracked, not scored, and prior North American entries have been purged from the database rather than merely deprioritised. Scope is now Europe, MENA and South Africa only, with budgets scoped to CHF 20,000–100,000. (2) <b style="color:var(--text)">Team-size realism</b> — PACE is a ~30-person team, so organisations whose scale would put PACE up against holding-company agencies on a like-for-like service breadth (e.g. On, ICC Cricket World Cup 2027, MotoGP SEG) are flagged with a "scale caution" rather than excluded outright, since the underlying signal can still be genuine even where the realistic engagement is a narrow, specialist slice rather than the full mandate.</p>
+        <p>Two rules apply to all batches: (1) Scope is Europe, MENA and South Africa only, with budgets scoped to CHF 20,000–100,000. (2) <b style="color:var(--text)">Team-size realism</b> — PACE is a ~30-person team, so organisations whose scale would put PACE up against holding-company agencies on a like-for-like service breadth (e.g. On, ICC Cricket World Cup 2027, MotoGP SEG) are flagged with a "scale caution" rather than excluded outright, since the underlying signal can still be genuine even where the realistic engagement is a narrow, specialist slice rather than the full mandate.</p>
       </div>
     </div>
 
@@ -631,8 +652,7 @@ const batch5 = [
 
 const batchScanCounts = {1:51, 3:22, 4:16, 5:19}; // organisations searched but not qualified, per batch
 const seedBatches = [ {n:1, data:batch1}, {n:3, data:batch3}, {n:4, data:batch4}, {n:5, data:batch5} ];
-// North America is out of scope entirely (removed per instruction, not just paused) — these are purged
-// from any previously-persisted storage on load, regardless of how they got there.
+// Legacy entries permanently purged from the database on load — never re-added by any batch
 const removedIds = ['nwsl','target-sports-usa','yoggies-gotham','dallas-mavericks','mls'];
 
 let opportunities = [];
@@ -827,7 +847,7 @@ function renderKpis(){
   document.getElementById('kpiHighPriority').textContent = opportunities.filter(o=>o.score>90 && o.friction==='Low').length;
   const contactCount = opportunities.reduce((sum,o)=>sum+(o.contacts?o.contacts.length:0),0);
   document.getElementById('kpiContacts').textContent = contactCount;
-  document.getElementById('batchNote').innerHTML = `<b>Batch ${meta.batches||1} of an ongoing scan.</b> ${meta.totalScanned||totalScannedThisBatch} organisations evaluated cumulatively; ${opportunities.length} have met the evidence threshold overall, of which <b style="color:var(--text)">${inFocusList.length} are in current focus</b> (Europe/MENA/South Africa, CHF 20,000–100,000). North America has been removed entirely and is no longer tracked. Some out-of-range legacy entries remain logged for history but are excluded from the focus view by default. Data persists in this dashboard — run another batch any time to continue without losing this history.`;
+  document.getElementById('batchNote').innerHTML = `<b>Batch ${meta.batches||1} of an ongoing scan.</b> ${meta.totalScanned||totalScannedThisBatch} organisations evaluated cumulatively; ${opportunities.length} have met the evidence threshold overall, of which <b style="color:var(--text)">${inFocusList.length} are in current focus</b> (Europe/MENA/South Africa, CHF 20,000–100,000). Some out-of-range legacy entries remain logged for history but are excluded from the focus view by default. Data persists in this dashboard — run another batch any time to continue without losing this history.`;
   document.getElementById('railFoot').textContent = `Batch ${meta.batches||1} · ${inFocusList.length} in focus (${opportunities.length} total) · updated ${new Date().toISOString().slice(0,10)}`;
 }
 
@@ -835,6 +855,15 @@ function renderTopCards(){
   const inFocusList = opportunities.filter(o=>o.inFocus!==false);
   const top = [...inFocusList].sort((a,b)=>b.score-a.score).slice(0,6);
   document.getElementById('topCards').innerHTML = top.map(cardHtml).join('');
+}
+
+function renderNewBatchCards(){
+  const inFocusList = opportunities.filter(o=>o.inFocus!==false);
+  const newest = inFocusList.filter(o=>o.newThisWeek).sort((a,b)=>b.score-a.score);
+  document.getElementById('newBatchHeading').textContent = `New This Batch (Batch ${meta.batches||1})`;
+  document.getElementById('newBatchCards').innerHTML = newest.length
+    ? newest.map(cardHtml).join('')
+    : '<p style="color:var(--text-faint);font-size:13px;">No new in-focus leads were added in the most recent batch.</p>';
 }
 
 function openDetail(id){
@@ -910,6 +939,7 @@ function closeDetail(){ document.getElementById('overlay').classList.remove('act
 function render(){
   populateFilters();
   renderKpis();
+  renderNewBatchCards();
   renderTopCards();
   renderOpportunities();
   renderContacts();
