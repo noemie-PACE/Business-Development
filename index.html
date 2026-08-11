@@ -92,6 +92,8 @@
   .tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px;}
   .tag{font-size:10.5px;background:var(--surface-raised);border:1px solid var(--border);color:var(--text-dim);padding:2px 7px;border-radius:5px;}
   .flame{position:absolute;top:-8px;right:10px;font-size:15px;}
+  .reach-tick{position:absolute;top:-8px;left:-8px;width:22px;height:22px;border-radius:50%;background:var(--surface);border:1.5px solid var(--border);color:var(--text-faint);font-size:11px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s;padding:0;}
+  .reach-tick:hover{background:var(--teal);border-color:var(--teal);color:#fff;transform:scale(1.12);}
   .friction-row{display:flex;justify-content:space-between;align-items:center;margin-top:12px;font-size:11px;color:var(--text-dim);}
   .friction-badge{font-weight:600;padding:1px 7px;border-radius:4px;}
   .friction-badge.Low{color:var(--teal);background:rgba(53,217,180,.1);}
@@ -172,6 +174,7 @@
       <button data-view="method"><span class="dot"></span>Methodology</button>
     </nav>
     <div class="rail-foot" id="railFoot">Batch 1 · loading…</div>
+    <div id="reachedOutBar" style="padding:8px 20px 16px;font-size:11.5px;color:var(--text-faint);cursor:pointer;" onclick="openReachedOutPanel()"></div>
   </div>
 
   <div class="main">
@@ -342,6 +345,7 @@
 <script>
 const STORAGE_KEY = 'pace-opportunities-v1';
 const META_KEY = 'pace-meta-v1';
+const REACHED_OUT_KEY = 'pace-reached-out-v1';
 
 // ---------------- BATCH 1 DATA (verified, cited) ----------------
 const batch1 = [
@@ -885,6 +889,34 @@ const removedIds = ['nwsl','target-sports-usa','yoggies-gotham','dallas-maverick
 let opportunities = [];
 let meta = {batches:0, totalScanned:0, history:[]};
 
+// "Reached out" — client-side only (this browser/device), via localStorage.
+// Ticking a lead hides it from every view without deleting it from the
+// underlying batch data, so it can always be restored.
+let reachedOut = new Set();
+function loadReachedOut(){
+  try{
+    const raw = localStorage.getItem(REACHED_OUT_KEY);
+    reachedOut = new Set(raw ? JSON.parse(raw) : []);
+  }catch(e){ reachedOut = new Set(); }
+}
+function saveReachedOut(){
+  try{ localStorage.setItem(REACHED_OUT_KEY, JSON.stringify([...reachedOut])); }catch(e){ /* storage unavailable */ }
+}
+function markReachedOut(id){
+  reachedOut.add(id);
+  saveReachedOut();
+  render();
+}
+function restoreOpportunity(id){
+  reachedOut.delete(id);
+  saveReachedOut();
+  render();
+  openReachedOutPanel(); // keep the panel open and refreshed after a restore
+}
+function activeOpportunities(){
+  return opportunities.filter(o => !reachedOut.has(o.id));
+}
+
 async function loadData(){
   let stored = null;
   try{ stored = await window.storage.get(STORAGE_KEY); }catch(e){ stored = null; }
@@ -960,6 +992,7 @@ function cardHtml(o){
   const scaleBadge = o.scaleCaution ? `<span style="color:var(--amber);font-size:10px;font-weight:700;border:1px solid var(--amber);border-radius:4px;padding:1px 5px;margin-left:6px;" title="May exceed realistic capacity for a ~30-person delivery team">SCALE CAUTION</span>` : '';
   const legacyBadge = (o.inFocus===false) ? `<span style="color:var(--text-faint);font-size:10px;font-weight:700;border:1px solid var(--text-faint);border-radius:4px;padding:1px 5px;margin-left:6px;" title="Outside current EU/MENA/South Africa, CHF20-100k focus">OUT OF CURRENT FOCUS</span>` : '';
   return `<div class="card" onclick="openDetail('${o.id}')">
+    <button class="reach-tick" title="Mark as reached out (hides from view — restore any time from the sidebar)" onclick="event.stopPropagation(); markReachedOut('${o.id}');">✓</button>
     ${flame}
     <div class="card-top">
       <div>
@@ -977,12 +1010,19 @@ function cardHtml(o){
 }
 
 function populateFilters(){
-  const countries = [...new Set(opportunities.map(o=>o.country))].sort();
-  const cats = [...new Set(opportunities.flatMap(o=>o.categories))].sort();
+  const active = activeOpportunities();
+  const countries = [...new Set(active.map(o=>o.country))].sort();
+  const cats = [...new Set(active.flatMap(o=>o.categories))].sort();
   const fc = document.getElementById('fCountry');
+  const fcSelected = fc.value;
+  fc.innerHTML = '<option value="">Country: All</option>';
   countries.forEach(c=>{ const opt=document.createElement('option'); opt.value=c; opt.textContent=c; fc.appendChild(opt); });
+  fc.value = countries.includes(fcSelected) ? fcSelected : '';
   const fcat = document.getElementById('fCategory');
+  const fcatSelected = fcat.value;
+  fcat.innerHTML = '<option value="">Category: All</option>';
   cats.forEach(c=>{ const opt=document.createElement('option'); opt.value=c; opt.textContent=c; fcat.appendChild(opt); });
+  fcat.value = cats.includes(fcatSelected) ? fcatSelected : '';
 }
 
 function renderOpportunities(){
@@ -993,7 +1033,7 @@ function renderOpportunities(){
   const sort = document.getElementById('fSort').value;
   const focusOnly = document.getElementById('fFocusOnly').checked;
 
-  let list = opportunities.filter(o=>{
+  let list = activeOpportunities().filter(o=>{
     let match = true;
     if(focusOnly && o.inFocus===false) match=false;
     if(q){
@@ -1017,7 +1057,7 @@ function renderOpportunities(){
 function renderContacts(){
   const q = (document.getElementById('contactSearch').value||'').toLowerCase();
   const rows = [];
-  opportunities.forEach(o=>{
+  activeOpportunities().forEach(o=>{
     if(o.contacts && o.contacts.length){
       o.contacts.forEach(c=>{
         const hay = (c.name+' '+c.title+' '+o.name).toLowerCase();
@@ -1039,7 +1079,7 @@ function renderContacts(){
 
 function renderTrends(){
   const tally = {};
-  opportunities.forEach(o=> o.categories.forEach(c=> tally[c]=(tally[c]||0)+1));
+  activeOpportunities().forEach(o=> o.categories.forEach(c=> tally[c]=(tally[c]||0)+1));
   const max = Math.max(...Object.values(tally),1);
   const html = Object.entries(tally).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`
     <div class="trend-bar"><div class="label">${k}</div><div class="track"><div class="fill" style="width:${(v/max*100)}%"></div></div><div class="val">${v}</div></div>
@@ -1050,7 +1090,7 @@ function renderTrends(){
 function renderMap(){
   const regions = {'Europe':0,'MENA':0,'South Africa':0};
   const menaCountries = ['saudi arabia','uae','united arab emirates','qatar','egypt','morocco'];
-  opportunities.forEach(o=>{
+  activeOpportunities().forEach(o=>{
     if(o.inFocus===false) return; // out-of-focus legacy entries excluded from the geography view
     const c = o.country.toLowerCase();
     if(c.includes('south africa')) regions['South Africa']++;
@@ -1068,24 +1108,53 @@ function renderMap(){
 }
 
 function renderKpis(){
-  const inFocusList = opportunities.filter(o=>o.inFocus!==false);
+  const active = activeOpportunities();
+  const inFocusList = active.filter(o=>o.inFocus!==false);
   document.getElementById('kpiScanned').textContent = meta.totalScanned || totalScannedThisBatch;
   document.getElementById('kpiQualified').textContent = inFocusList.length + ' in focus';
-  document.getElementById('kpiHighPriority').textContent = opportunities.filter(o=>o.score>90 && o.friction==='Low').length;
-  const contactCount = opportunities.reduce((sum,o)=>sum+(o.contacts?o.contacts.length:0),0);
+  document.getElementById('kpiHighPriority').textContent = active.filter(o=>o.score>90 && o.friction==='Low').length;
+  const contactCount = active.reduce((sum,o)=>sum+(o.contacts?o.contacts.length:0),0);
   document.getElementById('kpiContacts').textContent = contactCount;
-  document.getElementById('batchNote').innerHTML = `<b>Batch ${meta.batches||1} of an ongoing scan.</b> ${meta.totalScanned||totalScannedThisBatch} organisations evaluated cumulatively; ${opportunities.length} have met the evidence threshold overall, of which <b style="color:var(--text)">${inFocusList.length} are in current focus</b> (Europe/MENA/South Africa, CHF 20,000–100,000). Some out-of-range legacy entries remain logged for history but are excluded from the focus view by default. Data persists in this dashboard — run another batch any time to continue without losing this history.`;
-  document.getElementById('railFoot').textContent = `Batch ${meta.batches||1} · ${inFocusList.length} in focus (${opportunities.length} total) · updated ${new Date().toISOString().slice(0,10)}`;
+  document.getElementById('batchNote').innerHTML = `<b>Batch ${meta.batches||1} of an ongoing scan.</b> ${meta.totalScanned||totalScannedThisBatch} organisations evaluated cumulatively; ${active.length} have met the evidence threshold overall, of which <b style="color:var(--text)">${inFocusList.length} are in current focus</b> (Europe/MENA/South Africa, CHF 20,000–100,000). Some out-of-range legacy entries remain logged for history but are excluded from the focus view by default. Data persists in this dashboard — run another batch any time to continue without losing this history.`;
+  document.getElementById('railFoot').textContent = `Batch ${meta.batches||1} · ${inFocusList.length} in focus (${active.length} total) · updated ${new Date().toISOString().slice(0,10)}`;
+}
+
+function renderReachedOutBar(){
+  const bar = document.getElementById('reachedOutBar');
+  if(!bar) return;
+  if(reachedOut.size===0){ bar.innerHTML=''; return; }
+  bar.innerHTML = `✓ ${reachedOut.size} marked as reached out — <span style="text-decoration:underline;">view / restore</span>`;
+}
+
+function openReachedOutPanel(){
+  const list = opportunities.filter(o=>reachedOut.has(o.id));
+  const rows = list.length
+    ? list.map(o=>`
+      <div class="contact-card" style="display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <div class="name">${o.name}</div>
+          <div class="title">${o.country} · ${o.industry}</div>
+        </div>
+        <button onclick="restoreOpportunity('${o.id}')" style="background:var(--surface-raised);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:5px 10px;font-size:12px;cursor:pointer;">Restore</button>
+      </div>`).join('')
+    : '<p class="empty-field">Nothing marked as reached out.</p>';
+  document.getElementById('detailBody').innerHTML = `
+    <button class="detail-close" onclick="closeDetail()">✕</button>
+    <h2>Reached Out (${list.length})</h2>
+    <p style="color:var(--text-dim);font-size:12.5px;max-width:640px;">Hidden from every view on this device only — ticking a lead never touches the underlying batch data, so nothing is lost. Restore any of these to bring them back.</p>
+    <div class="block" style="margin-top:14px;display:flex;flex-direction:column;gap:8px;">${rows}</div>
+  `;
+  document.getElementById('overlay').classList.add('active');
 }
 
 function renderTopCards(){
-  const inFocusList = opportunities.filter(o=>o.inFocus!==false);
+  const inFocusList = activeOpportunities().filter(o=>o.inFocus!==false);
   const top = [...inFocusList].sort((a,b)=>b.score-a.score).slice(0,6);
   document.getElementById('topCards').innerHTML = top.map(cardHtml).join('');
 }
 
 function renderNewBatchCards(){
-  const inFocusList = opportunities.filter(o=>o.inFocus!==false);
+  const inFocusList = activeOpportunities().filter(o=>o.inFocus!==false);
   const newest = inFocusList.filter(o=>o.newThisWeek).sort((a,b)=>b.score-a.score);
   document.getElementById('newBatchHeading').textContent = `New This Batch (Batch ${meta.batches||1})`;
   document.getElementById('newBatchCards').innerHTML = newest.length
@@ -1166,6 +1235,7 @@ function closeDetail(){ document.getElementById('overlay').classList.remove('act
 function render(){
   populateFilters();
   renderKpis();
+  renderReachedOutBar();
   renderNewBatchCards();
   renderTopCards();
   renderOpportunities();
@@ -1192,6 +1262,7 @@ document.querySelectorAll('nav button').forEach(btn=>{
 document.getElementById('contactSearch').addEventListener('input', renderContacts);
 document.getElementById('overlay').addEventListener('click', (e)=>{ if(e.target.id==='overlay') closeDetail(); });
 
+loadReachedOut();
 loadData();
 </script>
 </body>
