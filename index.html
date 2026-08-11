@@ -885,36 +885,66 @@ const batchScanCounts = {1:51, 3:22, 4:16, 5:19, 6:28, 7:60}; // organisations s
 const seedBatches = [ {n:1, data:batch1}, {n:3, data:batch3}, {n:4, data:batch4}, {n:5, data:batch5}, {n:6, data:batch6}, {n:7, data:batch7} ];
 // Legacy entries permanently purged from the database on load — never re-added by any batch
 const removedIds = ['nwsl','target-sports-usa','yoggies-gotham','dallas-mavericks','mls'];
+// Leads Noémie has already reached out to. Cross-device, lives in the pushed data —
+// updated ONLY by the "Sync reached-out state" GitHub Action (.github/workflows/reached-out-sync.yml),
+// triggered by opening a labeled issue from the tick/restore buttons below. Never hand-edit
+// this line directly; open a "reached-out: <id>" or "restore: <id>" issue instead so the
+// Action's validation + audit trail apply. Weekly batch updates must never touch this line.
+const reachedOutIds = [];
 
 let opportunities = [];
 let meta = {batches:0, totalScanned:0, history:[]};
 
-// "Reached out" — client-side only (this browser/device), via localStorage.
-// Ticking a lead hides it from every view without deleting it from the
-// underlying batch data, so it can always be restored.
+// "Reached out" state has two layers:
+//  1. reachedOutIds (above) — baked into the pushed data, so it's the same on
+//     every device. Updated ONLY by the "Sync reached-out state" GitHub Action,
+//     triggered by the issue opened below.
+//  2. reachedOut / restoredOverride — local-only, instant optimistic UI feedback
+//     on THIS browser while waiting (usually seconds, occasionally longer) for
+//     that Action to run and for the page to be reloaded with updated data.
+const RESTORED_OVERRIDE_KEY = 'pace-restored-override-v1';
 let reachedOut = new Set();
+let restoredOverride = new Set();
 function loadReachedOut(){
   try{
     const raw = localStorage.getItem(REACHED_OUT_KEY);
     reachedOut = new Set(raw ? JSON.parse(raw) : []);
   }catch(e){ reachedOut = new Set(); }
+  try{
+    const raw2 = localStorage.getItem(RESTORED_OVERRIDE_KEY);
+    restoredOverride = new Set(raw2 ? JSON.parse(raw2) : []);
+  }catch(e){ restoredOverride = new Set(); }
 }
 function saveReachedOut(){
   try{ localStorage.setItem(REACHED_OUT_KEY, JSON.stringify([...reachedOut])); }catch(e){ /* storage unavailable */ }
 }
+function saveRestoredOverride(){
+  try{ localStorage.setItem(RESTORED_OVERRIDE_KEY, JSON.stringify([...restoredOverride])); }catch(e){ /* storage unavailable */ }
+}
+function reachedOutIssueUrl(action, id){
+  const title = encodeURIComponent(`${action}: ${id}`);
+  const label = encodeURIComponent(action === 'restore' ? 'restore-lead' : 'reached-out');
+  return `https://github.com/noemie-PACE/Business-Development/issues/new?title=${title}&labels=${label}`;
+}
 function markReachedOut(id){
   reachedOut.add(id);
-  saveReachedOut();
+  restoredOverride.delete(id);
+  saveReachedOut(); saveRestoredOverride();
   render();
+  window.open(reachedOutIssueUrl('reached-out', id), '_blank');
 }
 function restoreOpportunity(id){
   reachedOut.delete(id);
-  saveReachedOut();
+  restoredOverride.add(id);
+  saveReachedOut(); saveRestoredOverride();
   render();
   openReachedOutPanel(); // keep the panel open and refreshed after a restore
+  window.open(reachedOutIssueUrl('restore', id), '_blank');
 }
 function activeOpportunities(){
-  return opportunities.filter(o => !reachedOut.has(o.id));
+  return opportunities.filter(o =>
+    restoredOverride.has(o.id) || (!reachedOut.has(o.id) && !reachedOutIds.includes(o.id))
+  );
 }
 
 async function loadData(){
@@ -992,7 +1022,7 @@ function cardHtml(o){
   const scaleBadge = o.scaleCaution ? `<span style="color:var(--amber);font-size:10px;font-weight:700;border:1px solid var(--amber);border-radius:4px;padding:1px 5px;margin-left:6px;" title="May exceed realistic capacity for a ~30-person delivery team">SCALE CAUTION</span>` : '';
   const legacyBadge = (o.inFocus===false) ? `<span style="color:var(--text-faint);font-size:10px;font-weight:700;border:1px solid var(--text-faint);border-radius:4px;padding:1px 5px;margin-left:6px;" title="Outside current EU/MENA/South Africa, CHF20-100k focus">OUT OF CURRENT FOCUS</span>` : '';
   return `<div class="card" onclick="openDetail('${o.id}')">
-    <button class="reach-tick" title="Mark as reached out (hides from view — restore any time from the sidebar)" onclick="event.stopPropagation(); markReachedOut('${o.id}');">✓</button>
+    <button class="reach-tick" title="Mark as reached out — hides on every device, opens a GitHub tab to confirm (restore any time from the sidebar)" onclick="event.stopPropagation(); markReachedOut('${o.id}');">✓</button>
     ${flame}
     <div class="card-top">
       <div>
@@ -1122,18 +1152,21 @@ function renderKpis(){
 function renderReachedOutBar(){
   const bar = document.getElementById('reachedOutBar');
   if(!bar) return;
-  if(reachedOut.size===0){ bar.innerHTML=''; return; }
-  bar.innerHTML = `✓ ${reachedOut.size} marked as reached out — <span style="text-decoration:underline;">view / restore</span>`;
+  const hiddenCount = opportunities.length - activeOpportunities().length;
+  if(hiddenCount===0){ bar.innerHTML=''; return; }
+  bar.innerHTML = `✓ ${hiddenCount} marked as reached out — <span style="text-decoration:underline;">view / restore</span>`;
 }
 
 function openReachedOutPanel(){
-  const list = opportunities.filter(o=>reachedOut.has(o.id));
+  const list = opportunities.filter(o =>
+    !restoredOverride.has(o.id) && (reachedOut.has(o.id) || reachedOutIds.includes(o.id))
+  );
   const rows = list.length
     ? list.map(o=>`
       <div class="contact-card" style="display:flex;justify-content:space-between;align-items:center;">
         <div>
           <div class="name">${o.name}</div>
-          <div class="title">${o.country} · ${o.industry}</div>
+          <div class="title">${o.country} · ${o.industry}${reachedOutIds.includes(o.id) ? '' : ' <span style="color:var(--amber);">· syncing…</span>'}</div>
         </div>
         <button onclick="restoreOpportunity('${o.id}')" style="background:var(--surface-raised);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:5px 10px;font-size:12px;cursor:pointer;">Restore</button>
       </div>`).join('')
@@ -1141,7 +1174,7 @@ function openReachedOutPanel(){
   document.getElementById('detailBody').innerHTML = `
     <button class="detail-close" onclick="closeDetail()">✕</button>
     <h2>Reached Out (${list.length})</h2>
-    <p style="color:var(--text-dim);font-size:12.5px;max-width:640px;">Hidden from every view on this device only — ticking a lead never touches the underlying batch data, so nothing is lost. Restore any of these to bring them back.</p>
+    <p style="color:var(--text-dim);font-size:12.5px;max-width:640px;">Hidden from every view, on every device — this ticks a GitHub issue that a workflow syncs into the live data within a minute or so (never deletes the underlying lead data, so it's always recoverable). Restoring opens a matching GitHub tab too — approve it there to fully sync back everywhere; this device updates immediately either way.</p>
     <div class="block" style="margin-top:14px;display:flex;flex-direction:column;gap:8px;">${rows}</div>
   `;
   document.getElementById('overlay').classList.add('active');
