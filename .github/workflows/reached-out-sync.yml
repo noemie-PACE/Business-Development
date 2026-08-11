@@ -1,0 +1,123 @@
+name: Sync reached-out state
+
+# Triggered by opening an issue titled "reached-out: <id>" (label: reached-out)
+# or "restore: <id>" (label: restore-lead) — see the tick/restore buttons in
+# index.html (reachedOutIssueUrl()). Edits the reachedOutIds array in
+# index.html accordingly, pushes to main, and closes the issue.
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  sync:
+    if: >-
+      contains(github.event.issue.labels.*.name, 'reached-out') ||
+      contains(github.event.issue.labels.*.name, 'restore-lead')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Apply change to reachedOutIds
+        id: apply
+        env:
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+        run: |
+          python3 - <<'PY'
+          import re, os
+
+          title = os.environ['ISSUE_TITLE']
+
+          m = re.match(r'^\s*(reached-out|restore)\s*:\s*(.+?)\s*$', title, re.I)
+          out = {}
+          if not m:
+              out['status'] = 'error'
+              out['message'] = f"Could not parse an id from issue title: {title!r}"
+          else:
+              action, lead_id = m.group(1).lower(), m.group(2).strip()
+              is_restore = (action == 'restore')
+
+              if not re.match(r'^[a-z0-9][a-z0-9\-]{1,80}$', lead_id):
+                  out['status'] = 'error'
+                  out['message'] = f"id {lead_id!r} doesn't look like a valid lead id — refusing to touch data."
+              else:
+                  with open('index.html', encoding='utf-8') as f:
+                      content = f.read()
+
+                  m2 = re.search(r"const reachedOutIds = \[(.*?)\];", content, re.S)
+                  if not m2:
+                      out['status'] = 'error'
+                      out['message'] = "Could not find 'const reachedOutIds = [...];' in index.html"
+                  else:
+                      inner = m2.group(1)
+                      ids = [x.strip().strip("'\"") for x in re.findall(r"'[^']*'|\"[^\"]*\"", inner)]
+
+                      changed = False
+                      if is_restore:
+                          if lead_id in ids:
+                              ids.remove(lead_id); changed = True
+                      else:
+                          if lead_id not in ids:
+                              ids.append(lead_id); changed = True
+
+                      if not changed:
+                          out['status'] = 'nochange'
+                          out['message'] = f"{lead_id} was already in the desired state — nothing to do."
+                          out['lead_id'] = lead_id
+                          out['is_restore'] = str(is_restore).lower()
+                      else:
+                          new_inner = ', '.join(f"'{i}'" for i in ids)
+                          new_content = content[:m2.start()] + f"const reachedOutIds = [{new_inner}];" + content[m2.end():]
+
+                          blocks = re.findall(r'<script>(.*?)</script>', new_content, re.S)
+                          js = ''.join(blocks)
+                          if js.count('{') != js.count('}') or js.count('[') != js.count(']'):
+                              out['status'] = 'error'
+                              out['message'] = "Edit would unbalance braces/brackets in <script> — refusing to write."
+                          else:
+                              with open('index.html', 'w', encoding='utf-8') as f:
+                                  f.write(new_content)
+                              out['status'] = 'changed'
+                              out['message'] = f"{'Restored' if is_restore else 'Marked reached out'}: {lead_id}"
+                              out['lead_id'] = lead_id
+                              out['is_restore'] = str(is_restore).lower()
+
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+              for k, v in out.items():
+                  f.write(f"{k}={v}\n")
+          if out['status'] == 'error':
+              print(f"::error::{out['message']}")
+              raise SystemExit(1)
+          else:
+              print(out['message'])
+          PY
+
+      - name: Commit and push
+        if: steps.apply.outputs.status == 'changed'
+        run: |
+          git config user.name "pace-bd-bot"
+          git config user.email "actions@github.com"
+          git add index.html
+          git commit -m "${{ steps.apply.outputs.message }} (via #${{ github.event.issue.number }})"
+          git pull --rebase origin main
+          git push
+
+      - name: Close issue
+        if: steps.apply.outputs.status == 'changed' || steps.apply.outputs.status == 'nochange'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue close ${{ github.event.issue.number }} --repo ${{ github.repository }} --comment "${{ steps.apply.outputs.message }} ✅"
+
+      - name: Comment on failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue comment ${{ github.event.issue.number }} --repo ${{ github.repository }} --body "⚠️ Automatic sync failed — check the [workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details. Nothing was pushed; issue left open for review."
