@@ -38,6 +38,17 @@ fi
 
 cd "$REPO" || { log "ERROR: repo dir '$REPO' not found."; exit 1; }
 
+# Safety check: never blow away in-progress manual edits. This script used to
+# `git reset --hard origin/main` unconditionally, which silently destroyed
+# uncommitted edits (happened twice during development — once from a manual
+# test run, once from this job's own normal 15-min poll catching an edit
+# mid-flight). If anything is uncommitted, skip this run entirely rather than
+# guess whether it's safe to discard.
+if ! git diff --quiet || ! git diff --cached --quiet; then
+  log "SKIPPED: uncommitted local changes present in '$REPO' — not touching them. Commit or stash before the next 15-min poll, or this run is simply skipped harmlessly."
+  exit 0
+fi
+
 fetch_ok=true
 if ! git fetch origin main -q; then
   fetch_ok=false
