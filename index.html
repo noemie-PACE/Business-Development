@@ -92,6 +92,8 @@
   .score-pill.lo{color:var(--text-dim);}
   .tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px;}
   .tag{font-size:10.5px;background:var(--surface-raised);border:1px solid var(--border);color:var(--text-dim);padding:2px 7px;border-radius:5px;}
+  .pace-service{color:var(--teal);font-size:11px;font-weight:700;margin-top:7px;text-transform:uppercase;letter-spacing:.3px;}
+  .tag.primary-service{background:var(--teal);color:#04121a;border-color:var(--teal);font-weight:700;}
   .flame{position:absolute;top:-8px;right:10px;font-size:15px;}
   .reach-tick{position:absolute;top:-8px;left:-8px;width:22px;height:22px;border-radius:50%;background:var(--surface);border:1.5px solid var(--border);color:var(--text-faint);font-size:11px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s;padding:0;}
   .reach-tick:hover{background:var(--teal);border-color:var(--teal);color:#fff;transform:scale(1.12);}
@@ -323,6 +325,11 @@
           <div><span>Decision Maker Identified</span><span>5%</span></div>
           <div><span>Competitive Intensity (favourability)</span><span>5%</span></div>
         </div>
+        <p style="color:var(--text-dim);font-size:12px;max-width:720px;margin-top:6px;">"Content Opportunity" is interpreted broadly: video, motion design, graphic design, creative production, content systems, localisation, repurposing, social-first content, scalable production, AI-enabled workflows and production capacity all count as evidence.</p>
+        <h3>PACE Commercial Fit</h3>
+        <p><b style="color:var(--text)">PACE's primary commercial wedge is content.</b> The strongest opportunities have a specific, evidenced need for content production, creative services, scalable content systems, localisation, social-first content or additional production capacity. The broader PACE offering includes social and digital ecosystems, campaign activation, marketing strategy, growth amplification, paid performance and sponsorship advisory.</p>
+        <p>Leads are not scored simply because an organisation spends money on sports marketing. The strongest opportunities combine a fresh buying signal with a specific problem PACE can solve, a realistic CHF 20,000-100,000 workstream and a credible route to the decision-maker.</p>
+        <p>Particular weight is given to situations where a new sponsorship, event, campaign, market expansion or digital initiative creates additional content and creative requirements that an existing team may struggle to deliver without additional capacity.</p>
         <h3>What "Batch 1" actually covers</h3>
         <p>500 organisations cannot be individually verified in a single research pass without either dropping citation quality or fabricating detail, both against the brief's own rules. This run scanned roughly 60 candidate organisations across sponsorship, marketing-leadership and digital-transformation signals; <b style="color:var(--text)">9 met the evidence threshold</b> for inclusion. The rest are logged as "scanned, not qualified" rather than silently dropped. Reaching a cumulative 500 will take several more batches, each one appends to this same dashboard's storage rather than starting over.</p>
         <h3>Known limitations, stated plainly</h3>
@@ -1032,6 +1039,7 @@ function cardHtml(o){
       </div>
       ${scorePill(o.score)}
     </div>
+    ${o.primaryPaceService ? `<div class="pace-service" title="Primary PACE service for this opportunity">${o.primaryPaceService}</div>` : ''}
     <div class="tags">${o.categories.slice(0,3).map(c=>`<span class="tag">${c}</span>`).join('')}</div>
     <div class="friction-row">
       <span>${signalHtml(o.score)} Buying signal</span>
@@ -1246,6 +1254,15 @@ function openDetail(id){
         <p>${o.budgetEstimate}</p>
       </div>
     </div>
+
+    ${o.primaryPaceService ? `
+    <div class="block" style="margin-bottom:16px;">
+      <h3>PACE Service Mapping</h3>
+      <div class="tags">
+        <span class="tag primary-service" title="Primary service">${o.primaryPaceService}</span>
+        ${(o.secondaryPaceServices||[]).map(s=>`<span class="tag" title="Secondary service">${s}</span>`).join('')}
+      </div>
+    </div>` : ''}
 
     <div class="block" style="margin-bottom:16px;">
       <h3>Why PACE (vs. Two Circles / Wasserman / Deloitte / Accenture / SPORTFIVE)</h3>
