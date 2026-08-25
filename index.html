@@ -198,7 +198,7 @@
 
       <div class="section">
         <h2>Executive Summary</h2>
-        <p style="color:var(--text-dim);font-size:13.5px;">Batch 8: 288 organisations screened, scoped to Europe and South Africa, CHF 20,000-100,000. Strongest activity this batch: Swiss home-market signals (HC Sierre, FC Zurich Frauen, Special Olympics Switzerland, HC Davos) and a new Ellis Park naming-rights partnership in South Africa.</p>
+        <p style="color:var(--text-dim);font-size:13.5px;max-width:720px;">Batch 9: 38 organisations screened, scoped to Europe and South Africa, CHF 20,000-100,000. The strongest fresh signals are Cricket Switzerland's brand-new home-market title sponsorship and FK Austria Wien's first-ever main sponsorship with Aramark, alongside a newly appointed Director of Marketing and Communications at the Football Association of Ireland.</p>
       </div>
 
       <div class="section">
@@ -246,7 +246,7 @@
 
       <div class="section">
         <h2>Assessment</h2>
-        <p style="color:var(--text-dim);font-size:13.5px;max-width:720px;">Two genuinely live 1YTG opportunities remain on the radar: the <b style="color:var(--text)">Women's Ice Hockey World Championship 2028</b> and the <b style="color:var(--text)">Special Olympics World Winter Games Switzerland 2029</b>, both confirmed, both more than 12 months out, both with real runway to build a campaign before their respective 1YTG anniversaries. The Special Olympics Games is the stronger fit given its Zurich opening ceremony. Everything from the 2027 event cluster (figure skating, alpine skiing, open water swimming and beach volleyball) has already missed its 1YTG window and is flagged accordingly; pursuing any of these now would mean pitching a different, more compressed activation angle, not a 1YTG campaign. <b style="color:var(--text)">Batch 8 re-screen:</b> no new host announcements or threshold crossings among the confirmed 1YTG-window events. Host venues for the 2028 Women's Ice Hockey Worlds remain unannounced, still expected in autumn 2026. The most notable movement this batch is on the Switzerland 2038 Olympic and Paralympic Winter Games bid: a decentralised, multi-canton venue plan was unveiled in January 2026 and won Federal Council support, the IOC is now holding privileged discussions with Switzerland until the end of 2027, and the bid's corporate guarantor roster has grown to include On, Sunrise and, as of June 2026, ABB with a CHF 20 million pledge. This remains a twelve-year horizon, well outside a 1YTG framing, but the bid is visibly firming up and is worth an early relationship conversation given PACE's Zurich base. EuroBeachVolley 2027 remains unchanged and still flagged closed (30 June to 4 July 2027, Gstaad).</p>
+        <p style="color:var(--text-dim);font-size:13.5px;max-width:720px;">Two genuinely live 1YTG opportunities remain on the radar: the <b style="color:var(--text)">Women's Ice Hockey World Championship 2028</b> and the <b style="color:var(--text)">Special Olympics World Winter Games Switzerland 2029</b>, both confirmed, both more than 12 months out, both with real runway to build a campaign before their respective 1YTG anniversaries. The Special Olympics Games is the stronger fit given its Zurich opening ceremony. Everything from the 2027 event cluster (figure skating, alpine skiing, open water swimming and beach volleyball) has already missed its 1YTG window and is flagged accordingly; pursuing any of these now would mean pitching a different, more compressed activation angle, not a 1YTG campaign. <b style="color:var(--text)">Batch 9 re-screen:</b> no new Swiss host announcements, date confirmations or threshold crossings were found this batch; all events and statuses below are unchanged from batch 8. Host venues for the 2028 Women's Ice Hockey Worlds remain unannounced, still expected in autumn 2026. The Switzerland 2038 Olympic and Paralympic Winter Games bid remains at the same stage reported last batch, IOC privileged discussions continuing to end of 2027, corporate guarantors On, Sunrise and ABB in place, a twelve-year horizon well outside a 1YTG framing but still worth an early relationship conversation given PACE's Zurich base. EuroBeachVolley 2027 remains unchanged and still flagged closed (30 June to 4 July 2027, Gstaad).</p>
       </div>
     </div>
 
@@ -985,8 +985,127 @@ const batch8 = [
     primaryPaceService:'Premium Content Engine', secondaryPaceServices:['Campaign Activation'],
   }
 ];
-const batchScanCounts = {1:51, 3:22, 4:16, 5:19, 6:28, 7:60, 8:45}; // organisations searched but not qualified, per batch
-const seedBatches = [ {n:1, data:batch1}, {n:3, data:batch3}, {n:4, data:batch4}, {n:5, data:batch5}, {n:6, data:batch6}, {n:7, data:batch7}, {n:8, data:batch8} ];
+const batch9 = [
+  {
+    id:'fk-austria-wien-aramark', name:'FK Austria Wien', country:'Austria', industry:'Sports Ecosystem - Football (Austrian Bundesliga)', inFocus:true,
+    categories:['Sponsorship','Brand Activation','Digital Asset Management'],
+    score:68, friction:'Medium',
+    frictionReasoning:'A first-ever main sponsorship for Aramark means no incumbent creative relationship is yet locked in for this specific deal, but Vienna has an established local sports-marketing agency scene that will compete for the work.',
+    scoreBreakdown:{'Strategic Fit':78,'Buying Signal Strength':82,'Budget Fit':65,'Content Opportunity':82,'Digital Transformation Opportunity':40,'Ease of Access':55,'Decision Maker Identified':20,'Competitive Intensity (favourability)':55},
+    signals:[{text:'Aramark became the new main and shirt sponsor of FK Austria Wien for the 2026/27 season, its first-ever main sponsorship of any kind, replacing Frankstahl and expanding on its prior role as the club\'s stadium catering partner. The collaboration is framed around jointly developing the Generali-Arena matchday experience.', source:'Aramark official newsroom, August 2026', url:'https://www.aramark.com/newsroom/news/2026/august/germany-austria-wien-soccer-sponsorship'}],
+    whyPace:'A brand entering its first-ever main sponsorship, on a shirt and stadium-experience deal with no prior activation playbook, creates an immediate need for launch content, matchday social assets and a rollout campaign, exactly PACE\'s Premium Content Engine and Brand Activation lines. FK Austria Wien is a right-sized top-flight Austrian club, not a Bundesliga giant, keeping the mandate within realistic reach for a 30-person team.',
+    outreach:'Why now: brand-new main sponsor with zero prior activation history at this club, landing right at the start of the 2026/27 season. Signal: Aramark-FK Austria Wien main sponsorship, August 2026. Service: Brand Activation and Digital Asset Management for the sponsor rollout, plus ongoing matchday content. First conversation: ask FK Austria Wien\'s commercial team how the new Aramark partnership is being brought to life for fans across digital and matchday channels this season.',
+    budgetEstimate:'CHF 30,000-80,000 (estimate; Austrian Bundesliga club scope, sized to a first-season sponsor rollout).',
+    contacts:[],
+    primaryPaceService:'Premium Content Engine', secondaryPaceServices:['Campaign Activation','Creative Services'],
+  },
+  {
+    id:'cricket-switzerland-flash', name:'Cricket Switzerland', country:'Switzerland', industry:'Sports Governing Bodies - Cricket', inFocus:true,
+    categories:['Sponsorship','Brand Activation','Content Retainer'],
+    score:72, friction:'Low',
+    frictionReasoning:'A small, home-market Swiss federation with a brand-new title sponsor and no existing content or activation agency relationship evident; very unlikely to be on the radar of larger international sports-marketing agencies.',
+    scoreBreakdown:{'Strategic Fit':85,'Buying Signal Strength':85,'Budget Fit':60,'Content Opportunity':80,'Digital Transformation Opportunity':45,'Ease of Access':70,'Decision Maker Identified':20,'Competitive Intensity (favourability)':70},
+    signals:[{text:'Flash Sports & Media Holdings, Inc. (Nasdaq: FLZH) was named Official Title Sponsor of the Swiss National Cricket Men\'s Team, with the sponsorship procured and managed on Flash\'s behalf by Dubai-based Liberty Gaming in partnership with Cricket Switzerland, a brand-new commercial relationship for the federation.', source:'GlobeNewswire, 20 August 2026', url:'https://www.globenewswire.com/news-release/2026/08/20/3348234/0/en/flash-sports-media-holdings-inc-nasdaq-flzh-named-official-title-sponsor-of-the-swiss-national-cricket-men-s-team.html'}],
+    whyPace:'A brand-new title sponsor for a small home-market federation is a clean, early-stage entry point: the federation now has real sponsor obligations to fulfil (kit branding, matchday and digital content, sponsor recognition) but almost certainly lacks in-house production capacity to deliver them. As a Zurich-based agency, PACE has a genuine home-market access advantage that Two Circles, Wasserman or SPORTFIVE cannot match on cost or relationship, and Cricket Switzerland is exactly the right scale for a 30-person team.',
+    outreach:'Why now: a brand-new title sponsorship just landed for a federation with no prior major commercial partner, meaning content and activation planning for the deal is likely starting from zero. Signal: Flash Sports & Media Holdings title sponsorship, 20 August 2026. Service: Content Retainer plus Brand Activation to fulfil the new sponsor\'s visibility and content obligations. First conversation: ask Cricket Switzerland how it plans to deliver content and digital assets against the new Flash Sports title sponsorship, given the federation\'s size.',
+    budgetEstimate:'CHF 20,000-50,000 (estimate; small home-market federation scope, at the lower end of PACE\'s target range).',
+    contacts:[],
+    primaryPaceService:'Premium Content Engine', secondaryPaceServices:['Sponsorship Activation','Campaign Activation'],
+  },
+  {
+    id:'fai-marketing-comms', name:'Football Association of Ireland (FAI)', country:'Ireland', industry:'Sports Governing Bodies - Football', inFocus:true,
+    categories:['Strategy','Commercial Strategy','Fan Engagement'],
+    score:66, friction:'Medium',
+    frictionReasoning:'A national federation of FAI\'s profile typically runs structured procurement for larger commercial work, and PACE would be entering without a prior FAI relationship, though PACE\'s existing Irish sports pipeline (Cricket Ireland, Hockey Ireland, IRFU) gives a credible market foothold.',
+    scoreBreakdown:{'Strategic Fit':75,'Buying Signal Strength':70,'Budget Fit':60,'Content Opportunity':70,'Digital Transformation Opportunity':45,'Ease of Access':55,'Decision Maker Identified':75,'Competitive Intensity (favourability)':50},
+    signals:[{text:'Eadaoin Keane was appointed the FAI\'s new Director of Marketing and Communications, joining on 1 August 2026 from her role as Chief Marketing Officer of Vision Ireland, with an explicit mandate to help shape and influence the FAI\'s new 2026-2030 strategy across all levels of Irish football.', source:'Sport for Business, August 2026', url:'https://sportforbusiness.com/fai-appoints-new-director-of-marketing-and-communications/'}],
+    whyPace:'A brand-new marketing and communications leader arriving with an explicit brief to help shape a fresh five-year strategy is the classic early window for a federation to review how it delivers content and campaigns, rather than defend an existing supplier relationship. PACE\'s existing footprint across Irish sport (Cricket Ireland, Hockey Ireland, IRFU) is a genuine relationship and credibility advantage for an initial conversation.',
+    outreach:'Why now: a newly appointed Director of Marketing and Communications, in post from 1 August 2026, is actively shaping the FAI\'s 2026-2030 strategy, the classic new-leader window for reviewing delivery partners. Service: Marketing Strategy plus Fan Engagement content to support the new strategic period. First conversation: ask Eadaoin Keane how the FAI plans to resource content and campaign delivery against the new 2026-2030 strategy, and whether external production capacity is being considered.',
+    budgetEstimate:'CHF 30,000-90,000 (estimate; national federation scope, sized to a scoped strategy-linked content or campaign workstream rather than the full FAI marketing budget).',
+    contacts:[{name:'Eadaoin Keane',email:null,title:'Director of Marketing and Communications, FAI',source:'Sport for Business',url:'https://sportforbusiness.com/fai-appoints-new-director-of-marketing-and-communications/',confidence:0.8,reason:'Named and titled in trade press coverage of the appointment, with prior role independently corroborated. Direct email and LinkedIn not independently verified.'}],
+    primaryPaceService:'Marketing Strategy', secondaryPaceServices:['Campaign Activation','Premium Content Engine'],
+  },
+  {
+    id:'al-jazira-new-balance', name:'Al Jazira Club', country:'United Arab Emirates', industry:'Sports Ecosystem - Football (UAE Pro League)', inFocus:false,
+    categories:['Sponsorship','Brand Activation','Digital Asset Management','Content Retainer'],
+    score:63, friction:'High',
+    frictionReasoning:'New Balance has already produced a launch campaign film for this partnership, indicating an existing creative relationship is in place for the marquee brand moment; the UAE sponsorship-content market also draws significant regional agency competition.',
+    scoreBreakdown:{'Strategic Fit':72,'Buying Signal Strength':78,'Budget Fit':60,'Content Opportunity':75,'Digital Transformation Opportunity':40,'Ease of Access':40,'Decision Maker Identified':20,'Competitive Intensity (favourability)':40},
+    signals:[{text:'Al Jazira Sports and Cultural Club signed a three-year strategic kit partnership with New Balance, announced 10 August 2026, covering the first football team, the football academy and the club\'s Other Sports teams, alongside a launch campaign film celebrating three new, locally-inspired kits for 2026-27.', source:'Gulf News, 10 August 2026', url:'https://gulfnews.com/sport/al-jazira-announce-three-year-deal-with-new-balance-1.500635930'}],
+    whyPace:'A multi-year kit partnership spanning the first team, academy and multiple other-sports programmes is a sustained, multi-team content requirement, not a single campaign moment, squarely PACE\'s Content at Scale and Digital Asset Management lines. Flagged with real competitive intensity because New Balance\'s own agency delivered the launch film, so PACE\'s realistic angle is the ongoing season-long content programme across the academy and other sports teams, not the marquee brand launch.',
+    outreach:'Why now: a new three-year kit partner has just launched, with strong momentum but the marquee campaign already produced by New Balance\'s own team, leaving the ongoing academy and multi-sport content programme as the realistic opening. Service: Digital Asset Management and Content Retainer across the academy and Other Sports teams. First conversation: ask Al Jazira how it plans to sustain content output across the academy and other-sports programmes through the three-year New Balance partnership, beyond the launch campaign.',
+    budgetEstimate:'CHF 30,000-90,000 (estimate; multi-team UAE Pro League club scope).',
+    contacts:[],
+    primaryPaceService:'Premium Content Engine', secondaryPaceServices:['Digital Asset Management','Social and Digital Ecosystem'],
+  },
+  {
+    id:'vitoria-sc-hummel', name:'Vitória Sport Clube', country:'Portugal', industry:'Sports Ecosystem - Football (Primeira Liga)', inFocus:true,
+    categories:['Sponsorship','Brand Activation','Digital Asset Management'],
+    score:60, friction:'Medium',
+    frictionReasoning:'A mid-tier Primeira Liga club changing kit supplier after a decade with Macron is a genuine, accessible opportunity, though Portuguese football has an established domestic sports-marketing and content agency base that will also pitch for the rollout.',
+    scoreBreakdown:{'Strategic Fit':68,'Buying Signal Strength':65,'Budget Fit':65,'Content Opportunity':65,'Digital Transformation Opportunity':30,'Ease of Access':60,'Decision Maker Identified':20,'Competitive Intensity (favourability)':65},
+    signals:[{text:'Vitória Sport Clube announced a new five-year technical sponsorship with Hummel starting the 2026-27 season, ending a decade-long partnership with Macron; the club described it as a "return to the past to project into the future", referencing Hummel\'s earlier stint as kit supplier in 1991-92.', source:'Footy Headlines, 2026', url:'https://www.footyheadlines.com/5894158019/hummel-vitoria-sc-26-27-home-away-kits-released-no-more-macron.html'}],
+    whyPace:'A decade-long kit supplier relationship ending and a new five-year Hummel deal beginning is a natural moment for a full visual and content refresh, home and away kit launches, brand-identity storytelling and matchday assets, all squarely PACE\'s Brand Activation and Digital Asset Management lines. Vitória is a right-sized, historic mid-tier Primeira Liga club, not one of Portugal\'s big three, keeping the opportunity within realistic reach.',
+    outreach:'Why now: a rare kit-supplier change after ten years with Macron creates a natural full-season content and brand-refresh opportunity as the new Hummel identity rolls out. Signal: Vitória SC-Hummel five-year deal, 2026-27 season. Service: Brand Activation plus Digital Asset Management for the kit launch and ongoing matchday content. First conversation: ask Vitória SC\'s marketing team how the Hummel kit transition is being supported with content and fan-facing storytelling this season.',
+    budgetEstimate:'CHF 20,000-60,000 (estimate; mid-tier Primeira Liga club scope).',
+    contacts:[],
+    primaryPaceService:'Creative Services', secondaryPaceServices:['Premium Content Engine','Campaign Activation'],
+  },
+  {
+    id:'rc-celta-hummel', name:'RC Celta de Vigo', country:'Spain', industry:'Sports Ecosystem - Football (La Liga)', inFocus:true,
+    categories:['Sponsorship','Brand Activation','Digital Asset Management'],
+    score:58, friction:'Medium',
+    frictionReasoning:'A La Liga club sits in a more competitive Spanish sports-marketing agency market than a smaller domestic league, and no incumbent content relationship is confirmed for this specific kit transition.',
+    scoreBreakdown:{'Strategic Fit':66,'Buying Signal Strength':63,'Budget Fit':65,'Content Opportunity':62,'Digital Transformation Opportunity':30,'Ease of Access':55,'Decision Maker Identified':20,'Competitive Intensity (favourability)':55},
+    signals:[{text:'RC Celta de Vigo announced a new five-year technical sponsorship deal with Hummel, making the Danish brand the club\'s official kit supplier from the 2026-27 season.', source:'RC Celta official news', url:'https://rccelta.es/en/club/actualidad/hummel-nuevo-patrocinador-tecnico-del-real-club-celta/'}],
+    whyPace:'A new five-year kit-supplier relationship at a top-flight Spanish club creates a multi-season content and brand-rollout requirement, from kit launches to ongoing matchday and campaign assets. Celta is a stable, mid-table La Liga club rather than one of Spain\'s global giants, keeping the realistic engagement scope within reach of a 30-person team, though Spain\'s deep domestic agency market makes this a medium-friction opportunity.',
+    outreach:'Why now: a brand-new five-year kit partnership gives a clear multi-season content and brand-identity opportunity right at the point of transition. Signal: RC Celta-Hummel five-year deal, 2026-27 season. Service: Brand Activation and Digital Asset Management for the kit rollout and ongoing content. First conversation: ask RC Celta\'s commercial team how the new Hummel identity is being supported with content across the five-year term.',
+    budgetEstimate:'CHF 20,000-60,000 (estimate; stable La Liga club scope).',
+    contacts:[],
+    primaryPaceService:'Creative Services', secondaryPaceServices:['Premium Content Engine'],
+  },
+  {
+    id:'liv-golf-south-africa', name:'LIV Golf South Africa', country:'South Africa', industry:'Sports Ecosystem - Golf', inFocus:true, scaleCaution:true,
+    categories:['Event Content Production','Fan Engagement'],
+    score:54, friction:'High',
+    frictionReasoning:'LIV Golf runs its own global broadcast and content production infrastructure through major agency partners; realistic PACE access for a 30-person team is a narrow, local South African content slice only, not the tournament production itself.',
+    scoreBreakdown:{'Strategic Fit':60,'Buying Signal Strength':75,'Budget Fit':45,'Content Opportunity':70,'Digital Transformation Opportunity':35,'Ease of Access':30,'Decision Maker Identified':15,'Competitive Intensity (favourability)':25},
+    signals:[{text:'LIV Golf confirmed its first-ever tournament on the African continent, LIV Golf South Africa, taking place 20-22 March 2026 at The Club at Steyn City, Johannesburg, as part of a multi-year agreement.', source:'LIV Golf official news', url:'https://www.livgolf.com/news/first-look-liv-golf-south-africa-2026'}],
+    whyPace:'Included with an explicit scale caution rather than as a priority pursuit: a brand-new, globally broadcast golf event landing in South Africa for the first time creates genuine local content and storytelling opportunity, particularly host-market social content, local sponsor and partner activation, and South African player and fan angles, but LIV Golf\'s own production infrastructure will run the headline broadcast and content programme. PACE\'s Cape Town production base gives a logistical advantage for any local South African content role, similar to the existing Icons Cup South Africa watch item.',
+    outreach:'Why now: a first-ever LIV Golf event in Africa creates a natural moment to offer local South African content support distinct from the global broadcast feed. Service: Event Content Production, scoped to host-market social and digital content only. First conversation, if pursued: ask the local South African organising or sponsor-facing team what South Africa-specific content support exists separately from LIV Golf\'s own global production.',
+    budgetEstimate:'Likely CHF 200,000+ at the full production level (estimate); well above PACE\'s range, only a narrow, local South African content slice would realistically fit CHF 20,000-50,000.',
+    contacts:[],
+    primaryPaceService:'Premium Content Engine', secondaryPaceServices:['Event Content Production'],
+  },
+  {
+    id:'fc-porto-women-betano', name:'FC Porto (women\'s team)', country:'Portugal', industry:'Sports Ecosystem - Football (Liga Portuguesa Feminina)', inFocus:true, scaleCaution:true,
+    categories:['Sponsorship','Fan Engagement','Brand Activation'],
+    score:53, friction:'High',
+    frictionReasoning:'FC Porto\'s main sponsorship is held by Betano at the club-wide level, almost certainly with an established incumbent agency; the realistic PACE angle is narrowly the newly promoted women\'s team\'s content, not the main club mandate.',
+    scoreBreakdown:{'Strategic Fit':62,'Buying Signal Strength':68,'Budget Fit':45,'Content Opportunity':68,'Digital Transformation Opportunity':30,'Ease of Access':35,'Decision Maker Identified':15,'Competitive Intensity (favourability)':35},
+    signals:[{text:'Betano extended its main partnership with FC Porto through the 2028/29 season and, for the first time, will extend its sponsorship to the FC Porto women\'s team, which is competing in its first season in the Portuguese women\'s top flight, with branding on the women\'s team sleeve.', source:'iGaming Brazil, 31 July 2026', url:'https://igamingbrazil.com/en/bookmakers/2026/07/31/betano-and-fc-porto-extend-partnership-until-2029-with-new-projects-and-a-presence-in-womens-football/'}],
+    whyPace:'Included honestly as a scale-caution, narrow-angle watch item rather than a priority pursuit: FC Porto\'s main sponsorship sits at a scale PACE should not try to lead, but the specific extension of that partnership to a newly promoted, first-season women\'s team is a genuine women\'s-sport content opportunity that is unlikely to be resourced with the same production budget as the men\'s side. PACE\'s realistic angle is a scoped women\'s-team content or fan-engagement role, not the club\'s main sponsorship mandate.',
+    outreach:'Why now: the women\'s team\'s first season in the top flight, paired with a brand-new sponsor presence, means dedicated content support for the women\'s side is a live question. Service: Fan Engagement plus Brand Activation, scoped strictly to the women\'s team. First conversation, if pursued: ask FC Porto\'s women\'s football staff what dedicated content and storytelling support exists for the team\'s first top-flight season, separate from the main club\'s production.',
+    budgetEstimate:'Likely CHF 150,000+ at the full club-partnership level (estimate); above PACE\'s range, only a narrow women\'s-team content slice would realistically fit CHF 20,000-40,000.',
+    contacts:[],
+    primaryPaceService:'Premium Content Engine', secondaryPaceServices:['Fan Engagement'],
+  },
+  {
+    id:'rbfa-zalando', name:'Royal Belgian Football Association (RBFA)', country:'Belgium', industry:'Sports Governing Bodies - Football', inFocus:true, scaleCaution:true,
+    categories:['Sponsorship','Brand Activation','Commercial Strategy'],
+    score:52, friction:'High',
+    frictionReasoning:'Zalando is a major pan-European retailer with its own substantial marketing and creative infrastructure, and a national federation partnership of this size will very likely be led by Zalando\'s existing agency roster rather than opening a scoped role to a new delivery partner.',
+    scoreBreakdown:{'Strategic Fit':58,'Buying Signal Strength':70,'Budget Fit':40,'Content Opportunity':65,'Digital Transformation Opportunity':35,'Ease of Access':30,'Decision Maker Identified':15,'Competitive Intensity (favourability)':30},
+    signals:[{text:'Zalando announced a five-year strategic partnership with the Royal Belgian Football Association, launched 18 May 2026, described as embedding the Zalando brand into the heart of Belgian sports culture and fashion.', source:'Zalando Corporate newsroom, 18 May 2026', url:'https://corporate.zalando.com/en/fashion/zalando-and-rbfa-launch-five-year-partnership-embedding-brand-heart-belgian-sports-culture'}],
+    whyPace:'Included with an explicit scale caution: a five-year national-federation partnership with a brand the size of Zalando will draw major pan-European agencies for the headline campaign, but the fashion-and-culture framing of the deal creates real federation-side storytelling opportunity, fan-facing style content, behind-the-scenes access, cultural crossover content, that a large retail-focused agency may not prioritise. PACE\'s realistic angle is a narrowly scoped federation-side content role, not the Zalando brand campaign itself.',
+    outreach:'Why now: a brand-new five-year culture-and-fashion partnership is still in its early activation phase, leaving room to propose a federation-side storytelling angle distinct from Zalando\'s own retail marketing. Service: Brand Activation, scoped to RBFA-side fan and culture content only. First conversation, if pursued: ask the RBFA\'s marketing team what federation-led content exists around the Zalando partnership, separate from Zalando\'s own retail campaigns.',
+    budgetEstimate:'Likely CHF 300,000+ at the full partnership level (estimate); well above PACE\'s range, only a narrow federation-side content slice would realistically fit CHF 20,000-50,000.',
+    contacts:[],
+    primaryPaceService:'Premium Content Engine', secondaryPaceServices:['Brand Activation'],
+  }
+];
+const batchScanCounts = {1:51, 3:22, 4:16, 5:19, 6:28, 7:60, 8:45, 9:38}; // organisations searched but not qualified, per batch
+const seedBatches = [ {n:1, data:batch1}, {n:3, data:batch3}, {n:4, data:batch4}, {n:5, data:batch5}, {n:6, data:batch6}, {n:7, data:batch7}, {n:8, data:batch8}, {n:9, data:batch9} ];
 // Legacy entries permanently purged from the database on load, never re-added by any batch
 const removedIds = ['nwsl','target-sports-usa','yoggies-gotham','dallas-mavericks','mls'];
 // Leads Noémie has already reached out to. Cross-device, lives in the pushed data;
