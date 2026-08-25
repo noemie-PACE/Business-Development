@@ -41,12 +41,12 @@
 
 set -u
 
-SOURCE="$HOME/Desktop/PACE SNA/Business Development/index.html"
-REPO="$HOME/Desktop/Business-Development"
+SOURCE="$HOME/pace-bd/inbox/index.html"
+REPO="$HOME/pace-bd/Business-Development"
 LOG="$REPO/autopush.log"
-MANUAL_FILE="$HOME/Desktop/PACE SNA/Business Development/NEEDS_MANUAL_UPLOAD.html"
-MANUAL_INSTR="$HOME/Desktop/PACE SNA/Business Development/NEEDS_MANUAL_UPLOAD_INSTRUCTIONS.txt"
-REVIEW_FILE="$HOME/Desktop/PACE SNA/Business Development/REVIEW_NEEDED_invalid.html"
+MANUAL_FILE="$HOME/pace-bd/inbox/NEEDS_MANUAL_UPLOAD.html"
+MANUAL_INSTR="$HOME/pace-bd/inbox/NEEDS_MANUAL_UPLOAD_INSTRUCTIONS.txt"
+REVIEW_FILE="$HOME/pace-bd/inbox/REVIEW_NEEDED_invalid.html"
 MERGED_FILE="/tmp/pace_autopush_merged.html"
 
 log() {
