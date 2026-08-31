@@ -166,10 +166,27 @@ if errors:
     print('EXTRACT_FAIL:' + ','.join(errors))
     sys.exit(0)
 
-extracted_text = new_batch_blocks + m_exec.group(0) + m_swiss.group(0)
-if '—' in extracted_text or '–' in extracted_text:
-    print('EXTRACT_FAIL:DASHES_IN_NEW_CONTENT')
-    sys.exit(0)
+def fix_dashes(text):
+    # Never block a push over dashes — clean them instead, using the same
+    # rules applied by hand for batches 8 and 9. Order matters: ranges and
+    # structured fields are fixed first (narrow, safe patterns), then
+    # whatever em/en dashes remain (genuine prose asides) become commas,
+    # then any leftover of either character (belt and suspenders) also
+    # becomes a comma so nothing can slip through un-fixed.
+    text = re.sub(r'(?<=\S)[—–](?=\S)', '-', text)  # e.g. "20,000—100,000" -> hyphen
+    def colon_fix(m):
+        return m.group(0).replace('—', ':').replace('–', ':').replace(' :', ':')
+    text = re.sub(r"industry:'[^']*[—–][^']*'", colon_fix, text)
+    text = re.sub(r"source:'[^']*[—–][^']*'", colon_fix, text)
+    text = re.sub(r'\s[—–]\s', ', ', text)  # " — " / " – " (prose aside) -> ", "
+    text = text.replace('—', ',').replace('–', ',')  # any straggler
+    return text
+
+dash_count_before = (new_batch_blocks + m_exec.group(0) + m_swiss.group(0)).count('—') + \
+                     (new_batch_blocks + m_exec.group(0) + m_swiss.group(0)).count('–')
+new_batch_blocks = fix_dashes(new_batch_blocks)
+exec_block = fix_dashes(m_exec.group(0))
+swiss_block = fix_dashes(m_swiss.group(0))
 
 merged = live
 
@@ -183,18 +200,22 @@ old_exec = re.search(r'<h2>Executive Summary</h2>\s*<p[^>]*>.*?</p>', merged, re
 if not old_exec:
     print('EXTRACT_FAIL:LIVE_EXEC_SUMMARY_NOT_FOUND')
     sys.exit(0)
-merged = merged[:old_exec.start()] + m_exec.group(0) + merged[old_exec.end():]
+merged = merged[:old_exec.start()] + exec_block + merged[old_exec.end():]
 
 old_swiss = re.search(r'<div class="view" id="view-swiss-events">.*?\n    </div>\n', merged, re.S)
 if not old_swiss:
     print('EXTRACT_FAIL:LIVE_SWISS_EVENTS_NOT_FOUND')
     sys.exit(0)
-merged = merged[:old_swiss.start()] + m_swiss.group(0) + merged[old_swiss.end():]
+merged = merged[:old_swiss.start()] + swiss_block + merged[old_swiss.end():]
 
 blocks = re.findall(r'<script>(.*?)</script>', merged, re.S)
 js = ''.join(blocks)
 if js.count('{') != js.count('}') or js.count('[') != js.count(']'):
     print('EXTRACT_FAIL:UNBALANCED_AFTER_MERGE')
+    sys.exit(0)
+
+if '—' in merged or '–' in merged:
+    print('EXTRACT_FAIL:DASHES_SURVIVED_AUTO_FIX')
     sys.exit(0)
 
 protected = [('rel="icon"', 'FAVICON'), ('reach-tick', 'REACH_TICK'),
