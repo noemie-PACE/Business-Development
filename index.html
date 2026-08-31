@@ -1254,10 +1254,12 @@ async function loadData(){
         merged.newThisWeek = false;
         merged.scoreTrend = merged.score > prior.score ? 'up' : merged.score < prior.score ? 'down' : 'same';
         merged.previousScore = prior.score;
+        merged.batchIntroduced = prior.batchIntroduced!==undefined ? prior.batchIntroduced : n;
       } else {
         merged.newThisWeek = true;
         merged.scoreTrend = 'new';
         merged.previousScore = null;
+        merged.batchIntroduced = n;
       }
       existingById[o.id] = merged;
     });
@@ -1289,7 +1291,7 @@ function signalHtml(score){
 }
 
 function trendArrow(o){
-  if(o.scoreTrend==='new') return '<span style="color:var(--blue);font-size:10px;font-weight:700;border:1px solid var(--blue);border-radius:4px;padding:1px 5px;margin-left:6px;">NEW</span>';
+  if(o.batchIntroduced===meta.batches) return '<span style="color:var(--blue);font-size:10px;font-weight:700;border:1px solid var(--blue);border-radius:4px;padding:1px 5px;margin-left:6px;">NEW</span>';
   if(o.scoreTrend==='up') return `<span style="color:var(--teal);font-family:var(--font-mono);font-size:11px;margin-left:6px;" title="was ${o.previousScore}">↑</span>`;
   if(o.scoreTrend==='down') return `<span style="color:var(--coral);font-family:var(--font-mono);font-size:11px;margin-left:6px;" title="was ${o.previousScore}">↓</span>`;
   return `<span style="color:var(--text-faint);font-family:var(--font-mono);font-size:11px;margin-left:6px;" title="unchanged">→</span>`;
