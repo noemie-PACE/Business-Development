@@ -228,16 +228,21 @@ if missing:
 
 with open(out_path, 'w', encoding='utf-8') as f:
     f.write(merged)
-print('OK')
+print(f'OK:{dash_count_before}')
 PY
 )
 fi
 
-if [ "$extract_status" != "OK" ]; then
+if [[ "$extract_status" != OK:* ]]; then
   cp "$SOURCE" "$REVIEW_FILE"
   log "Extraction/merge failed for batch ${src_batch}: $extract_status — NOT pushed. Live site untouched. Source copy saved for review at '$REVIEW_FILE'."
   notify "PACE BD batch ${src_batch}: could not safely merge" "$extract_status — nothing pushed, live site untouched. See REVIEW_NEEDED_invalid.html and autopush.log."
   exit 1
+fi
+dash_note=""
+dashes_cleaned="${extract_status#OK:}"
+if [ -n "$dashes_cleaned" ] && [ "$dashes_cleaned" != "0" ]; then
+  dash_note=" ($dashes_cleaned dash character(s) auto-cleaned from the new content before pushing)"
 fi
 
 # --- attempt the push using the merged (feature-preserving) file ---
@@ -251,7 +256,7 @@ fi
 
 if git commit -m "Weekly BD scan, batch ${src_batch}" -q && git push -q; then
   sha=$(git rev-parse --short HEAD)
-  log "Pushed batch ${src_batch} successfully (commit ${sha}), merged onto the current live file — all existing features preserved."
+  log "Pushed batch ${src_batch} successfully (commit ${sha}), merged onto the current live file — all existing features preserved.${dash_note}"
   rm -f "$MANUAL_FILE" "$MANUAL_INSTR" "$REVIEW_FILE" "$MERGED_FILE" 2>/dev/null
   log "=== run end ==="
   exit 0
